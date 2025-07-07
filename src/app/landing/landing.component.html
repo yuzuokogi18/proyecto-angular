@@ -1,0 +1,258 @@
+<section class="text-gray-900 font-sans">
+  <!-- Encabezado -->
+  <div class="bg-[#70B2FD] py-0 px-6 md:px-12 lg:px-16">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-stretch min-h-[500px] md:min-h-[600px]">
+      <!-- Columna izquierda -->
+      <div class="w-full md:w-1/2 flex flex-col justify-start pt-2 md:pt-4 lg:pt-6 pl-10 md:pl-16 lg:pl-24">
+        <!-- Logo -->
+        <div class="relative mt-2 mb-3">
+          <img src="assets/LOGO.png" alt="Pulse Sense Logo"
+               class="h-24 md:h-20 lg:h-28 object-contain block">
+        </div>
+
+        <h1 class="text-[2.5rem] md:text-[3rem] lg:text-[3.5rem] font-serif font-bold text-black leading-tight mb-6">
+          Tecnología al<br>
+          servicio del<br>
+          cuidado<br>
+          geriátrico.
+        </h1>
+          <div class="mb-4">
+          <button (click)="scrollToRegistro()"
+        class="bg-[#2159C3] text-white font-bold text-xl px-5 py-3 rounded-md w-[200px] text-center
+               shadow-lg hover:shadow-xl hover:bg-[#1b4cab] hover:scale-105 transition-all duration-300 ease-in-out">
+  Empezar
+</button>
+
+        </div>
+
+        <!-- Texto pequeño -->
+        <p class="text-[#03045E] text-lg leading-snug font-medium">
+          Usado por +100 Doctores de<br>
+          cuidado y hospitales en LATAM
+        </p>
+      </div>
+
+  <div class="w-full md:w-1/2 flex justify-end items-end">
+        <img src="assets/prue.webp" alt="Grupo de doctores"
+             class="max-h-[100%] md:max-h-[600px] object-bottom object-contain self-end">
+      </div>
+    </div>
+  </div>
+
+  <!-- Benefits Mejorado con Efecto Hover -->
+<div class="p-8 bg-white">
+  <h2 class="text-center text-4xl font-bold text-[#023E8A] mb-6">¿Por qué usar nuestro sistema?</h2>
+  
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
+    
+    <!-- Card 1 -->
+    <div class="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105 border-b-4 border-transparent hover:border-[#023E8A]">
+      <img src="assets/1aaa.png" alt="Heart monitor" class="mx-auto h-28 mb-5 group-hover:scale-110 transition-transform duration-300">
+      <p class="text-gray-700 font-medium">Monitoreo 4 en 1<br>Toma los 4 signos vitales a la vez, sin complicaciones.</p>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105 border-b-4 border-transparent hover:border-[#023E8A]">
+      <img src="assets/2aaa.png" alt="Alert" class="mx-auto h-28 mb-5 group-hover:scale-110 transition-transform duration-300">
+      <p class="text-gray-700 font-medium">Alertas inteligentes<br>Menos estrés, más control.</p>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="group bg-white rounded-xl p-6 shadow-md hover:shadow-xl transition duration-300 transform hover:scale-105 border-b-4 border-transparent hover:border-[#023E8A]">
+      <img src="assets/3aaa.png" alt="Metrics" class="mx-auto h-28 mb-5 group-hover:scale-110 transition-transform duration-300">
+      <p class="text-gray-700 font-medium">Haz más en menos tiempo.<br>Monitorea y reporta sin esfuerzo.</p>
+    </div>
+
+  </div>
+</div>
+
+
+
+  <!-- Problem Section CORREGIDA (imagen izquierda, texto derecha) -->
+  <div class="bg-[#70B2FD] px-6 py-12 md:px-12 lg:px-24">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-10">
+      
+      <!-- Imagen izquierda -->
+      <div class="md:w-1/2 flex justify-center">
+        <img src="assets/conocer.png" alt="Cuidado adulto mayor" class="max-h-[350px] md:max-h-[400px] object-contain">
+      </div>
+
+      <!-- Texto derecha -->
+      <div class="md:w-1/2 text-black text-left">
+        <h2 class="text-3xl md:text-4xl font-bold mb-6">¿Qué problema resolvemos?</h2>
+        <p class="text-lg md:text-xl leading-relaxed mb-4">
+          El monitoreo actual de signos vitales en adultos mayores es fragmentado, lento y costoso.
+        </p>
+        <p class="text-lg md:text-xl leading-relaxed">
+          Nuestra solución elimina estos obstáculos al integrar
+          <strong class="font-bold">4 sensores de mediciones</strong>
+          en un solo dispositivo, portátil y conectado en tiempo real.
+        </p>
+      </div>
+
+    </div>
+  </div>
+<!-- How it Works -->
+<div class="p-8 bg-white">
+  <h2 class="text-center text-4xl font-bold text-[#023E8A] mb-6">¿Cómo funciona?</h2>
+  <div class="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
+    
+    <!-- Paso 1 -->
+    <div class="bg-[#f0f9ff] rounded-xl p-6 hover:shadow-xl hover:scale-105 transition-transform duration-300">
+      <img src="assets/colocarse.png" alt="Colócalo" class="mx-auto h-28 mb-5 transition-transform duration-300 hover:rotate-1">
+      <p>
+        <strong class="text-[#0077b6]">1. Colócalo</strong><br>
+        Sin cables ni complicaciones
+      </p>
+    </div>
+
+    <!-- Paso 2 -->
+    <div class="bg-[#f0f9ff] rounded-xl p-6 hover:shadow-xl hover:scale-105 transition-transform duration-300">
+      <img src="assets/medir.png" alt="Mide" class="mx-auto h-28 mb-5 transition-transform duration-300 hover:rotate-1">
+      <p>
+        <strong class="text-[#0077b6]">2. Mide</strong><br>
+        Ritmo cardiaco, temperatura y más
+      </p>
+    </div>
+
+    <!-- Paso 3 -->
+    <div class="bg-[#f0f9ff] rounded-xl p-6 hover:shadow-xl hover:scale-105 transition-transform duration-300">
+      <img src="assets/medi.png" alt="Envía" class="mx-auto h-28 mb-5 transition-transform duration-300 hover:rotate-1">
+      <p>
+        <strong class="text-[#0077b6]">3. Envía</strong><br>
+        Datos seguros en tiempo real
+      </p>
+    </div>
+
+    <!-- Paso 4 -->
+    <div class="bg-[#f0f9ff] rounded-xl p-6 hover:shadow-xl hover:scale-105 transition-transform duration-300">
+      <img src="assets/alertas.png" alt="Actúa" class="mx-auto h-28 mb-5 transition-transform duration-300 hover:rotate-1">
+      <p>
+        <strong class="text-[#0077b6]">4. Actúa</strong><br>
+        Decide en segundos con alertas inmediatas.
+      </p>
+    </div>
+
+  </div>
+</div>
+<!-- Registro Corregido: imagen izquierda, texto derecha, texto intermedio -->
+ <div #registroSection class="bg-[rgb(112,178,253)] px-6 md:px-10 lg:px-16">
+    <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center min-h-[520px] gap-10">
+
+      <!-- Imagen -->
+      <div class="md:w-1/2 flex justify-center items-end">
+        <img src="assets/registro.png" alt="Ilustración de doctores y enfermeros"
+             class="h-[400px] md:h-[480px] object-contain">
+      </div>
+
+      <!-- Texto y botones -->
+      <div class="md:w-1/2 text-black text-left flex flex-col justify-center items-start">
+        <h2 class="text-3xl md:text-4xl font-bold mb-8">
+          ¿Aún no te registras? <br><span class="text-[#023E8A]">¡Vamos!</span>
+        </h2>
+
+        <div class="flex flex-col sm:flex-row gap-6 w-full mb-6">
+          <!-- Doctor -->
+          <div class="flex flex-col gap-2 w-full sm:w-auto items-center">
+            <a [routerLink]="['/login']"
+               class="bg-white text-[#0077B6] font-semibold px-6 py-3 rounded-lg shadow hover:bg-blue-100 hover:scale-105 transition duration-200 text-center w-full">
+              ¿Eres Doctor? <span class="italic font-medium">Vamos</span>
+            </a>
+            <a [routerLink]="['/login']"
+               class="text-[#023E8A] text-sm font-medium hover:text-[#001D6E] hover:underline transition duration-200">
+              Ya tengo cuenta como Doctor
+            </a>
+          </div>
+
+          <!-- Enfermero -->
+          <div class="flex flex-col gap-2 w-full sm:w-auto items-center">
+            <a [routerLink]="['welcomeenfermero']"
+               class="bg-white text-[#0077B6] font-semibold px-6 py-3 rounded-lg shadow hover:bg-blue-100 hover:scale-105 transition duration-200 text-center w-full">
+              ¿Eres Enfermero? <span class="italic font-medium">Vamos</span>
+            </a>
+            <a [routerLink]="['/login']"
+               class="text-[#023E8A] text-sm font-medium hover:text-[#001D6E] hover:underline transition duration-200">
+              Ya tengo cuenta como Enfermero
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+
+<!-- Preguntas Frecuentes (FAQ) -->
+<div class="p-8 bg-white">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row items-center gap-8">
+
+    <!-- Imagen -->
+    <div class="flex-shrink-0 w-full md:w-1/2 flex justify-center">
+      <img src="assets/preguntas.png" alt="Doctor con documento"
+           class="w-72 md:w-96 h-auto max-w-full">
+    </div>
+
+    <!-- FAQ -->
+    <div class="w-full md:w-1/2">
+      <h2 class="text-2xl font-semibold text-gray-900 mb-6">Preguntas Frecuentes (FAQ)</h2>
+
+      <ng-container *ngFor="let faq of preguntasActuales">
+        <details class="mb-4">
+          <summary
+            class="cursor-pointer font-medium text-gray-800 flex justify-between items-center bg-white hover:bg-gray-50 border border-gray-200 rounded-lg px-4 py-3 transition">
+            {{ faq.pregunta }}
+            <span class="text-blue-600">▼</span>
+          </summary>
+          <p class="mt-2 text-gray-600 px-4">{{ faq.respuesta }}</p>
+        </details>
+      </ng-container>
+
+      <div class="mt-4 text-center">
+        <button (click)="togglePreguntas()"
+                class="text-blue-500 hover:underline text-sm italic transition duration-200">
+          {{ mostrandoPrimarios ? '... Ver más preguntas' : '... Ver preguntas anteriores' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+ 
+<footer class="bg-[#70B2FD] py-6 px-4">
+  <div class="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
+
+  <div class="flex flex-col items-start gap-4">
+      <div class="flex items-center gap-3">
+        <img src="assets/LOGO.png" alt="Pulse Sense Logo" class="h-20 md:h-24">
+        <span class="text-2xl font-bold">Pulse Sense</span>
+      </div>
+      <p class="text-sm leading-relaxed max-w-md">
+        Tecnología médica para profesionales de la salud.<br />
+        Conectamos datos, decisiones y cuidado en un solo lugar.
+      </p>
+    </div>
+
+   <div class="flex flex-col gap-4 md:items-end">
+      <h3 class="text-lg font-semibold">Síguenos</h3>
+      <div class="flex gap-4">
+        <a href="#" aria-label="WhatsApp">
+  <img src="assets/whatsapp.png" alt="WhatsApp" class="h-10 w-10 hover:scale-110 transition">
+</a>
+<a href="#" aria-label="Facebook">
+  <img src="assets/facebook.png" alt="Facebook" class="h-10 w-10 hover:scale-110 transition">
+</a>
+<a href="#" aria-label="Twitter">
+  <img src="assets/twitter.png" alt="Twitter" class="h-10 w-10 hover:scale-110 transition">
+</a>
+<a href="#" aria-label="Instagram">
+  <img src="assets/instagram.png" alt="Instagram" class="h-10 w-10 hover:scale-110 transition">
+</a>
+
+      </div>
+    </div>
+
+  </div>
+</footer>
+
+</section>

@@ -1,0 +1,26 @@
+<div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg p-6 w-full max-w-3xl relative">
+    <h2 class="text-xl font-bold mb-4">Busca tu hospital</h2>
+
+    <!-- Mapa -->
+    <div #mapContainer class="w-full h-[400px] rounded border"></div>
+
+    <p class="mt-4 text-sm text-gray-600">Haz clic en un hospital para seleccionarlo</p>
+
+    <!-- Botón de confirmación -->
+    <button
+      (click)="confirmarUbicacion()"
+      class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+      Usar esta ubicación
+    </button>
+
+    <!-- Mostrar selección -->
+    <div *ngIf="selectedName" class="mt-2 text-sm text-gray-700">
+      Hospital seleccionado: <strong>{{ selectedName }}</strong>
+    </div>
+
+    <div *ngIf="selectedLatLng" class="text-xs text-gray-500">
+      Coordenadas: {{ selectedLatLng }}
+    </div>
+  </div>
+</div>

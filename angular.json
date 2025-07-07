@@ -5,17 +5,24 @@
   "projects": {
     "proyecto-angular": {
       "projectType": "application",
-      "schematics": {},
+      "schematics": {"@schematics/angular:component": {
+    "style": "css",
+    "prefix": "app",
+    "inlineStyle": false,
+    "inlineTemplate": false,
+    "skipTests": false,
+    "flat": false
+  }},
       "root": "",
       "sourceRoot": "src",
       "prefix": "app",
       "architect": {
         "build": {
-          "builder": "@angular-devkit/build-angular:application",
+          "builder": "@angular-devkit/build-angular:browser",
           "options": {
             "outputPath": "dist/proyecto-angular",
             "index": "src/index.html",
-            "browser": "src/main.ts",
+            "main": "src/main.ts",
             "polyfills": [
               "zone.js"
             ],
