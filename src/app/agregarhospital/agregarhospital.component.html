@@ -1,62 +1,55 @@
 <div class="relative min-h-screen bg-white px-6 py-10 flex items-center justify-center font-junge">
-  <!-- Logo -->
-  <div class="absolute top-6 left-6">
-    <img src="assets/logo2.png" alt="Logo Pulse Sense" class="w-24" />
+  <div class="absolute top-6 left-6 z-50">
+    <img src="assets/logo2.png" alt="Pulse Sense" class="h-24 w-auto md:h-28" />
   </div>
 
-  <!-- Contenido -->
   <div class="grid grid-cols-1 md:grid-cols-2 gap-10 max-w-6xl w-full items-center justify-items-center">
-    <!-- Imagen hospital -->
     <div class="flex flex-col items-center mt-14">
       <img src="assets/hospital.png" alt="Hospital ilustración" class="w-full max-w-[500px]" />
     </div>
 
-    <!-- Formulario -->
     <div class="flex flex-col w-full items-start max-w-[380px]">
-      <h1 class="text-3xl md:text-4xl font-bold text-gray-900 mb-8 whitespace-nowrap">Agrega tu Hospital</h1>
+      <h1 class="text-3xl md:text-4xl font-bold text-[#03045E] mb-8 whitespace-nowrap">Agrega tu Hospital</h1>
 
-      <!-- Nombre -->
       <div class="mb-5 w-full">
         <label for="nombre" class="block text-lg font-semibold text-gray-800 mb-1">
           Nombre oficial del Hospital:
         </label>
         <input type="text" id="nombre" placeholder="Ej. Hospital Central"
+               [(ngModel)]="hospital.nombre"
                class="w-full border border-gray-300 px-4 py-3 rounded-md focus:ring-2 focus:ring-[#1D4ED8] focus:outline-none" />
       </div>
 
-      <!-- Ubicación -->
       <div class="mb-5 w-full">
         <label for="ubicacion" class="block text-lg font-semibold text-gray-800 mb-1">
           Ubicación:
         </label>
-        <input type="text" id="ubicacion" [(ngModel)]="ubicacion"
+        <input type="text" id="ubicacion"
+               [(ngModel)]="hospital.ubicacion"
                class="w-full border border-gray-300 px-4 py-3 rounded-md focus:ring-2 focus:ring-[#1D4ED8] focus:outline-none" />
         <a (click)="abrirMapa()" class="text-sm text-blue-600 mt-1 inline-block hover:underline cursor-pointer">
           Agregar por Google Maps
         </a>
       </div>
 
-      <!-- Modal -->
       <app-modal-mapa
         *ngIf="showMap"
         (locationSelected)="onUbicacionSeleccionada($event)">
       </app-modal-mapa>
 
-      <!-- Clues -->
       <div class="mb-8 w-full">
         <label for="clues" class="block text-lg font-semibold text-gray-800 mb-1">
           Clues (Clave oficial):
         </label>
         <input type="text" id="clues" placeholder="Ej. 20EJ1234"
+               [(ngModel)]="hospital.clues"
                class="w-full border border-gray-300 px-4 py-3 rounded-md focus:ring-2 focus:ring-[#1D4ED8] focus:outline-none" />
       </div>
 
-      <!-- Botón -->
-     <a [routerLink]="['/registrodoctor']"
-   class="w-full block text-center bg-[#1D4ED8] text-white py-3 rounded-md font-semibold hover:bg-[#153dc4] transition">
-  Agregar
-</a>
-
+      <button (click)="agregarHospital()"
+              class="w-full block text-center bg-[#1D4ED8] text-white py-3 rounded-md font-semibold hover:bg-[#153dc4] transition">
+        Agregar
+      </button>
     </div>
   </div>
 </div>

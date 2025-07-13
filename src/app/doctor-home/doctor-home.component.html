@@ -1,0 +1,73 @@
+<div class="flex min-h-screen font-sans"> 
+  <aside class="w-64 bg-[#2F65BB] text-white flex flex-col justify-between">
+    <div>
+    <div class="p-6 text-center text-xl font-bold">
+      <div class="mb-8">
+        <img src="assets/logosit.png" alt="Pulse Sense" class="mx-auto w-28 h-28 mb-2" />
+      </div>
+      <nav class="space-y-20 text-left mt-10">
+        <a href="#" class="flex items-center gap-3 hover:text-[#A6C2F0] text-lg font-semibold"><span>👤</span>Pacientes</a>
+        <a href="#" class="flex items-center gap-3 hover:text-[#A6C2F0] text-lg font-semibold"><span>👨‍⚕️</span>Enfermeros Asignados</a>
+        <a href="#" class="flex items-center gap-3 hover:text-[#A6C2F0] text-lg font-semibold"><span>📄</span>Reportes</a>
+        <a href="#" class="flex items-center gap-3 hover:text-[#A6C2F0] text-lg font-semibold"><span>📊</span>Historial</a>
+      </nav>
+    </div>
+  </div>
+  <div class="p-6">
+    <a href="#" class="flex items-center gap-2 hover:text-red-300">
+      <span>🚪</span> Cerrar Sesión
+    </a>
+  </div>
+  </aside>
+
+  <!-- Main content -->
+  <main class="flex-1 bg-white p-10">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <div class="flex items-center gap-4">
+        <div class="bg-[#A6C2F0] rounded-full w-12 h-12 flex items-center justify-center text-[#2F65BB] font-bold">👤</div>
+        <div>
+          <p class="text-lg font-medium">Paciente</p>
+          <p class="text-xl font-bold">{{ patient }}</p>
+        </div>
+      </div>
+      <div class="text-right">
+        <p class="text-sm text-gray-500">👩‍⚕️</p>
+        <p class="font-medium">{{ doctor }}</p>
+      </div>
+    </div>
+
+    <!-- Gráficas -->
+    <div class="grid grid-cols-2 gap-6">
+      <!-- Presión -->
+      <div class="bg-white shadow-lg rounded-xl p-5">
+        <p class="text-[#2F65BB] font-semibold mb-3">💉 Presión</p>
+        <img src="assets/grafica1.png" alt="Presión" />
+      </div>
+
+      <!-- Frecuencia O2 -->
+      <div class="bg-white shadow-lg rounded-xl p-5">
+        <p class="text-[#2F65BB] font-semibold mb-3">❤️ Frecuencia O₂</p>
+        <img src="assets/grafica2.png" alt="Frecuencia" />
+      </div>
+
+     <div class="bg-white shadow-lg rounded-xl p-5 col-span-2">
+  <p class="text-[#2F65BB] font-semibold mb-3">🌡️ Temperatura Corporal</p>
+  <canvas baseChart
+          [datasets]="chartData"
+          [labels]="chartLabels"
+          [options]="chartOptions"
+          [legend]="true"
+          [type]="'line'">
+  </canvas>
+</div>
+
+
+      <!-- Actividad Eléctrica 2 -->
+      <div class="bg-white shadow-lg rounded-xl p-5">
+        <p class="text-[#2F65BB] font-semibold mb-3">⚡ Actividad Eléctrica</p>
+        <img src="assets/grafica4.png" alt="Actividad Eléctrica" />
+      </div>
+    </div>
+  </main>
+</div>

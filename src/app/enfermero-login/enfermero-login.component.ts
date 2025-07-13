@@ -2,24 +2,19 @@ import { Component } from '@angular/core';
 import { RouterLink, RouterModule } from '@angular/router';
 import { DoctorService } from '../services/doctor.service';
 import { FormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
-
 @Component({
-  selector: 'app-login-doctor',
+  selector: 'app-enfermero-login',
   standalone: true,
-  imports: [RouterLink, RouterModule, FormsModule],
-  templateUrl: './login-doctor.component.html',
-  styleUrl: './login-doctor.component.css'
+  imports: [RouterLink,RouterModule,FormsModule],
+  templateUrl: './enfermero-login.component.html',
+  styleUrl: './enfermero-login.component.css'
 })
-export class LoginDoctorComponent {
+export class EnfermeroLoginComponent {
   correo: string = '';
   contrasena: string = '';
 
-  constructor(
-    private doctorService: DoctorService,
-    private router: Router
-  ) {
-    console.log('🟢 LoginDoctorComponent cargado');
+  constructor(private doctorService: DoctorService) {
+    console.log('🟢 EnfermeroLoginComponent cargado');
   }
 
   iniciarSesion() {
@@ -43,9 +38,7 @@ export class LoginDoctorComponent {
           localStorage.setItem('token', res.token);
         }
 
-        alert('✅ ¡Bienvenido doctor!');
-
-        this.router.navigate(['/doctorhome']);
+        alert('✅ ¡Bienvenido enfermero!');
       },
       error: (err: any) => {
         console.error('❌ Error en login:', err);
@@ -53,4 +46,5 @@ export class LoginDoctorComponent {
       }
     });
   }
+
 }

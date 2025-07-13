@@ -1,35 +1,50 @@
-<div class="flex h-screen items-center justify-center bg-white px-6">
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-10 w-full max-w-6xl">
-    
-    <!-- Ilustración -->
-    <div class="flex justify-center items-center">
-      <img src="assets/doctor-illustration.png" alt="Doctores" class="w-72 md:w-96">
+<div class="min-h-screen bg-white flex items-center justify-center px-6 font-[Junge] relative">
+
+  <!-- Logo visible sin fondo ni sombra -->
+  <div class="absolute top-6 left-6 z-50">
+    <img src="assets/logo2.png" alt="Pulse Sense" class="h-24 w-auto md:h-28" />
+  </div>
+
+  <!-- Contenedor principal -->
+  <div class="grid grid-cols-1 md:grid-cols-[55%_45%] items-center gap-10 w-full max-w-[1400px]">
+
+    <!-- Imagen ilustrativa (con margen superior para bajarla) -->
+    <div class="flex justify-center items-start mt-12">
+      <img src="assets/enferm.jpg" alt="Doctores" class="w-96 md:w-[500px]" />
     </div>
 
     <!-- Formulario -->
-    <div class="flex flex-col justify-center space-y-6">
-      <img src="assets/pulsesense-logo.png" alt="Pulse Sense Logo" class="w-32 mb-4">
+    <div class="w-full max-w-sm flex flex-col justify-start md:pl-4">
       
-      <h1 class="text-3xl font-semibold text-gray-800">¡Bienvenido, Enfermero!</h1>
-      <p class="text-lg text-gray-600">Busca tu hospital para ingresar</p>
+  <h1 class="text-4xl md:text-5xl font-bold text-[#03045E] mt-[-24px] mb-6">
+  ¡Bienvenido, Enfermero!
+</h1>
 
-      <div class="relative">
+
+
+      <p class="text-xl text-gray-700 mb-6">Busca tu hospital para ingresar</p>
+
+      <!-- Input con ícono (mayor margen inferior) -->
+      <div class="relative mb-6">
         <input 
           type="text" 
-          placeholder="Ejemplo.Hospital san miguel"
-          class="w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-        >
-        <span class="absolute right-3 top-2.5 text-gray-400 text-xl">🔍</span>
+          placeholder="Ejemplo. Hospital San Miguel"
+          class="w-full py-3 px-4 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1D4ED8] placeholder-gray-400"
+        />
+        <div class="absolute inset-y-0 right-0 flex items-center pr-3 text-[#1D4ED8]">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
+               viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M14 5l7 7m0 0l-7 7m7-7H3" />
+          </svg>
+        </div>
       </div>
 
-      <button 
-        class="bg-blue-600 text-white py-2 px-6 rounded-md hover:bg-blue-700 transition">
-        Continuar
-      </button>
-
-      <p class="text-sm text-gray-700">¿Ya tienes una cuenta? 
-        <a href="#" class="italic text-blue-600 hover:underline">Vamos</a>
-      </p>
+<a 
+  [routerLink]="['/enfermerologin']"
+  class="mt-6 block w-full border border-[#1D4ED8] text-[#1D4ED8] text-center py-3 rounded-md font-semibold hover:bg-blue-50 transition duration-200">
+  Continuar
+</a>
     </div>
   </div>
 </div>

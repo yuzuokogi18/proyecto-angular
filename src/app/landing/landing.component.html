@@ -154,7 +154,7 @@
         <div class="flex flex-col sm:flex-row gap-6 w-full mb-6">
           <!-- Doctor -->
           <div class="flex flex-col gap-2 w-full sm:w-auto items-center">
-            <a [routerLink]="['/login']"
+            <a [routerLink]="['/registrodoctor']"
                class="bg-white text-[#0077B6] font-semibold px-6 py-3 rounded-lg shadow hover:bg-blue-100 hover:scale-105 transition duration-200 text-center w-full">
               ¿Eres Doctor? <span class="italic font-medium">Vamos</span>
             </a>
@@ -166,11 +166,11 @@
 
           <!-- Enfermero -->
           <div class="flex flex-col gap-2 w-full sm:w-auto items-center">
-            <a [routerLink]="['welcomeenfermero']"
+            <a [routerLink]="['/registroenfermero']"
                class="bg-white text-[#0077B6] font-semibold px-6 py-3 rounded-lg shadow hover:bg-blue-100 hover:scale-105 transition duration-200 text-center w-full">
               ¿Eres Enfermero? <span class="italic font-medium">Vamos</span>
             </a>
-            <a [routerLink]="['/login']"
+            <a  [routerLink]="['welcomeenfermero']"
                class="text-[#023E8A] text-sm font-medium hover:text-[#001D6E] hover:underline transition duration-200">
               Ya tengo cuenta como Enfermero
             </a>

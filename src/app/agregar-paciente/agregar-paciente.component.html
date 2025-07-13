@@ -1,0 +1,78 @@
+<div class="min-h-screen flex items-center justify-center bg-gray-100">
+  <div class="bg-white shadow-md rounded-lg p-10 w-full max-w-4xl">
+    <!-- Logo y título -->
+    <div class="flex justify-between items-center mb-6">
+      <img src="assets/logo.png" alt="Logo" class="h-12">
+      <h2 class="text-2xl font-semibold text-center flex-1">Agregar Paciente</h2>
+    </div>
+
+    <!-- Formulario -->
+    <form (ngSubmit)="agregarPaciente()" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Nombre -->
+      <div>
+        <label class="block text-gray-700">Nombre:</label>
+        <input type="text" [(ngModel)]="paciente.nombre" name="nombre"
+               class="w-full border border-gray-300 rounded px-3 py-2">
+      </div>
+
+      <!-- Edad -->
+      <div>
+        <label class="block text-gray-700">Edad:</label>
+        <input type="number" [(ngModel)]="paciente.edad" name="edad"
+               class="w-full border border-gray-300 rounded px-3 py-2">
+      </div>
+
+      <!-- Apellidos -->
+      <div>
+        <label class="block text-gray-700">Apellidos:</label>
+        <input type="text" [(ngModel)]="paciente.apellidos" name="apellidos"
+               class="w-full border border-gray-300 rounded px-3 py-2">
+      </div>
+
+      <!-- Peso -->
+      <div>
+        <label class="block text-gray-700">Peso:</label>
+        <input type="number" [(ngModel)]="paciente.peso" name="peso"
+               class="w-full border border-gray-300 rounded px-3 py-2">
+      </div>
+
+      <!-- Estatura -->
+      <div>
+        <label class="block text-gray-700">Estatura:</label>
+        <input type="text" [(ngModel)]="paciente.estatura" name="estatura"
+               class="w-full border border-gray-300 rounded px-3 py-2">
+      </div>
+
+      <!-- Sexo -->
+      <div>
+        <label class="block text-gray-700">Sexo:</label>
+        <input type="text" [(ngModel)]="paciente.sexo" name="sexo"
+               class="w-full border border-gray-300 rounded px-3 py-2">
+      </div>
+
+      <!-- Tipo de Sangre -->
+      <div>
+        <label class="block text-gray-700">Tipo de Sangre:</label>
+        <input type="text" [(ngModel)]="paciente.tipoSangre" name="tipoSangre"
+               class="w-full border border-gray-300 rounded px-3 py-2">
+      </div>
+
+      <!-- Enfermeros Asignados -->
+      <div>
+        <label class="block text-gray-700">Enfermeros Asignados:</label>
+        <select [(ngModel)]="paciente.enfermeroId" name="enfermeroId"
+                class="w-full border border-gray-300 rounded px-3 py-2">
+          <option *ngFor="let e of enfermeros" [value]="e.id">{{ e.nombre }}</option>
+        </select>
+      </div>
+
+      <!-- Botón -->
+      <div class="col-span-1 md:col-span-2 flex justify-center mt-4">
+        <button type="submit"
+                class="bg-blue-600 text-white px-8 py-2 rounded hover:bg-blue-700 transition">
+          Agregar Paciente
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

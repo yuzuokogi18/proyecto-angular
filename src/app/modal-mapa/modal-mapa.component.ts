@@ -26,12 +26,14 @@ export class ModalMapaComponent implements AfterViewInit {
             lng: position.coords.longitude
           };
 
+          console.log('Ubicación del usuario:', userLocation);
+
           const map = new google.maps.Map(this.mapElement.nativeElement, {
             center: userLocation,
             zoom: 15
           });
 
-          // Marcar ubicación actual del usuario
+          // Marcar ubicación actual del usuario (ícono verde)
           new google.maps.Marker({
             position: userLocation,
             map: map,
@@ -39,22 +41,25 @@ export class ModalMapaComponent implements AfterViewInit {
             icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
           });
 
-          // Buscar hospitales
+          // Buscar hospitales cercanos
           const service = new google.maps.places.PlacesService(map);
           service.nearbySearch({
             location: userLocation,
-            radius: 10000,
-            type: 'hospital',
-            keyword: 'clínica'
+            radius: 15000, // Aumentado para asegurar más resultados
+            type: 'hospital'
           }, (results, status) => {
+            console.log('Estado del nearbySearch:', status);
+            console.log('Resultados recibidos:', results);
+
             if (status === google.maps.places.PlacesServiceStatus.OK && results) {
               for (let place of results) {
                 if (!place.geometry || !place.geometry.location) continue;
 
-                const marker = new google.maps.Marker({
+                const hospitalMarker = new google.maps.Marker({
                   position: place.geometry.location,
                   map: map,
-                  title: place.name
+                  title: place.name,
+                  icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' // ícono rojo
                 });
 
                 const infoWindow = new google.maps.InfoWindow({
@@ -67,16 +72,17 @@ export class ModalMapaComponent implements AfterViewInit {
                   `
                 });
 
-                // Evento al hacer clic en el marcador
-                marker.addListener('click', () => {
-                  infoWindow.open(map, marker);
+                hospitalMarker.addListener('click', () => {
+                  infoWindow.open(map, hospitalMarker);
 
+                  // Restaurar ícono anterior
                   if (this.activeMarker) {
-                    this.activeMarker.setIcon(); // Restaurar icono default
+                    this.activeMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
                   }
 
-                  marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
-                  this.activeMarker = marker;
+                  // Ícono azul para el seleccionado
+                  hospitalMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+                  this.activeMarker = hospitalMarker;
 
                   const lat = place.geometry!.location!.lat();
                   const lng = place.geometry!.location!.lng();
@@ -87,7 +93,8 @@ export class ModalMapaComponent implements AfterViewInit {
                 });
               }
             } else {
-              console.error('No se encontraron hospitales:', status);
+              alert('No se encontraron hospitales cercanos.');
+              console.error('Error en nearbySearch:', status);
             }
           });
         },

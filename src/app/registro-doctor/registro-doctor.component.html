@@ -1,37 +1,80 @@
-<div class="flex min-h-screen bg-white relative font-junge">
-  <!-- Logo en esquina -->
-  <img src="assets/logo2.png" alt="Pulse Sense Logo" class="absolute top-6 left-6 w-28" />
+<div class="flex min-h-screen bg-white relative font-[Junge]">
+  <!-- Logo -->
+  <div class="absolute top-6 left-6 z-50">
+    <img src="assets/logo2.png" alt="Pulse Sense" class="h-24 w-auto md:h-28" />
+  </div>
 
-  <!-- Imagen doctores (más abajo con mt-20) -->
-  <div class="w-1/2 flex items-start justify-center mt-20">
-    <img src="assets/registrarsedoctor.png" alt="Doctores" class="w-full max-w-lg mx-auto" />
+  <!-- Imagen doctores -->
+  <div class="w-1/2 flex items-center justify-center">
+    <img src="assets/registrarsedoctor.png" alt="Doctores" class="w-[90%] max-w-[520px] mt-16" />
   </div>
 
   <!-- Formulario -->
-  <div class="w-1/2 flex flex-col justify-center items-center px-6">
-    <h2 class="text-3xl font-semibold mb-8 text-center">Registrarse Doctor</h2>
-    <form class="space-y-5 w-full max-w-md">
+  <div class="w-1/2 flex flex-col justify-center px-20">
+    <h2 class="text-4xl font-bold text-[#03045E] mb-8 text-left">Registrarse Doctor</h2>
+
+    <form (ngSubmit)="registrar()" #form="ngForm" class="flex flex-col gap-4 w-[85%] max-w-md">
+      
+      <!-- Nombre -->
       <div>
-        <label class="block mb-1 font-medium">Nombre:</label>
-        <input type="text" class="w-full border border-gray-300 rounded-md px-4 py-2" />
+        <label class="block text-lg font-semibold text-gray-800 mb-1">Nombre:</label>
+        <input [(ngModel)]="doctor.nombre" name="nombre" type="text" required
+          pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+          class="w-full border px-4 py-3 rounded-md"
+          #nombre="ngModel" />
       </div>
+
+      <!-- Apellidos -->
+      <div class="flex gap-4">
+        <div class="w-1/2">
+          <label class="block text-base font-semibold text-gray-800 mb-1">Apellido Paterno:</label>
+          <input [(ngModel)]="doctor.apellido_p" name="apellido_p" type="text" required
+            pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+            class="w-full border px-3 py-2 rounded-md"
+            #apellido_p="ngModel" />
+        </div>
+
+        <div class="w-1/2">
+          <label class="block text-base font-semibold text-gray-800 mb-1">Apellido Materno:</label>
+          <input [(ngModel)]="doctor.apellido_m" name="apellido_m" type="text" required
+            pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+            class="w-full border px-3 py-2 rounded-md"
+            #apellido_m="ngModel" />
+        </div>
+      </div>
+
+      <!-- Cédula Profesional -->
       <div>
-        <label class="block mb-1 font-medium">Apellido:</label>
-        <input type="text" class="w-full border border-gray-300 rounded-md px-4 py-2" />
+        <label class="block text-lg font-semibold text-gray-800 mb-1">Cédula Profesional:</label>
+        <input [(ngModel)]="doctor.cedula" name="cedula" type="text" required
+          pattern="^\d{7,8}$"
+          class="w-full border px-4 py-3 rounded-md"
+          #cedula="ngModel" />
       </div>
+
+      <!-- Correo -->
       <div>
-        <label class="block mb-1 font-medium">Cédula Profesional:</label>
-        <input type="text" class="w-full border border-gray-300 rounded-md px-4 py-2" />
+        <label class="block text-lg font-semibold text-gray-800 mb-1">Correo:</label>
+        <input [(ngModel)]="doctor.correo" name="correo" type="email" required
+          class="w-full border px-4 py-3 rounded-md bg-blue-50"
+          #correo="ngModel" />
       </div>
+
+      <!-- Contraseña -->
       <div>
-        <label class="block mb-1 font-medium">Correo:</label>
-        <input type="email" class="w-full border border-gray-300 rounded-md px-4 py-2" />
+        <label class="block text-lg font-semibold text-gray-800 mb-1">Contraseña:</label>
+        <input [(ngModel)]="doctor.contrasena" name="contrasena" type="password" required
+          pattern="^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$"
+          class="w-full border px-4 py-3 rounded-md"
+          #contrasena="ngModel" />
+        <small class="text-gray-600 text-xs block mt-1">
+          Debe tener al menos 8 caracteres, una mayúscula y un número. Ej: <b>Doctor123</b>
+        </small>
       </div>
-      <div>
-        <label class="block mb-1 font-medium">Contraseña:</label>
-        <input type="password" class="w-full border border-gray-300 rounded-md px-4 py-2" />
-      </div>
-      <button type="submit" class="bg-blue-700 text-white w-full py-2 rounded-md hover:bg-blue-800 transition">
+
+      <!-- Botón -->
+      <button type="submit"
+        class="mt-3 w-full bg-blue-700 text-white py-3 rounded-md hover:bg-blue-800 transition">
         Registrarse
       </button>
     </form>
