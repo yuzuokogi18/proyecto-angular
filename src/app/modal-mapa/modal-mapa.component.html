@@ -1,26 +1,31 @@
 <div class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-  <div class="bg-white rounded-lg p-6 w-full max-w-3xl relative">
-    <h2 class="text-xl font-bold mb-4">Busca tu hospital</h2>
+  <div class="bg-white rounded-lg p-6 w-full max-w-3xl relative shadow-lg">
+    <h2 class="text-xl font-bold mb-4 text-[#03045E]">Busca tu hospital o clínica</h2>
 
     <!-- Mapa -->
-    <div #mapContainer class="w-full h-[400px] rounded border"></div>
+    <div #mapContainer class="w-full h-[400px] rounded border shadow-inner"></div>
 
-    <p class="mt-4 text-sm text-gray-600">Haz clic en un hospital para seleccionarlo</p>
+    <p class="mt-4 text-sm text-gray-600">Haz clic sobre el hospital o clínica para seleccionarlo</p>
 
-    <!-- Botón de confirmación -->
-    <button
-      (click)="confirmarUbicacion()"
-      class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
-      Usar esta ubicación
-    </button>
-
-    <!-- Mostrar selección -->
-    <div *ngIf="selectedName" class="mt-2 text-sm text-gray-700">
+    <!-- Información del hospital -->
+    <div *ngIf="selectedName" class="mt-4 text-sm text-gray-700">
       Hospital seleccionado: <strong>{{ selectedName }}</strong>
     </div>
-
     <div *ngIf="selectedLatLng" class="text-xs text-gray-500">
       Coordenadas: {{ selectedLatLng }}
     </div>
+
+    <!-- Botón: Agregar esta ubicación -->
+    <button *ngIf="selectedName && selectedLatLng"
+      (click)="confirmarUbicacion()"
+      class="mt-4 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition w-full font-semibold">
+      Agregar esta ubicación
+    </button>
+
+    <!-- Botón: Cancelar selección -->
+    <button (click)="cancelarSeleccion()"
+      class="mt-2 text-sm text-gray-500 underline hover:text-red-500 w-full">
+      Deshacer selección
+    </button>
   </div>
 </div>

@@ -34,6 +34,7 @@ export class AgregarhospitalComponent {
   }
 
   onUbicacionSeleccionada(direccion: string) {
+    console.log('Ubicación recibida:', direccion);
     this.hospital.ubicacion = direccion;
     this.showMap = false;
   }
@@ -57,33 +58,27 @@ export class AgregarhospitalComponent {
     }
 
     const cluesRegex = /^[A-Z0-9]{8}$/;
-
     if (!cluesRegex.test(this.hospital.clues.trim().toUpperCase())) {
-      await Swal.fire(
-        'CLUES inválida',
-        'La clave debe tener exactamente 8 caracteres alfanuméricos. Ejemplo: 20HJ1234',
-        'error'
-      );
+      await Swal.fire('CLUES inválida', 'Debe tener 8 caracteres alfanuméricos. Ejemplo: 20HJ1234', 'error');
       return;
     }
 
     const hospitalConDoctor = {
       ...this.hospital,
-      clues: this.hospital.clues.trim().toUpperCase(), // Forzamos mayúsculas
-      doctorCorreo: doctorCorreo
+      clues: this.hospital.clues.trim().toUpperCase(),
+      doctorCorreo
     };
 
     Swal.fire({ title: 'Registrando hospital...', icon: 'info', timer: 1000, showConfirmButton: false });
 
     this.hospitalService.agregarHospital(hospitalConDoctor).subscribe({
-      next: async (res: any) => {
+      next: async () => {
         await Swal.fire('¡Registro exitoso!', 'El hospital fue agregado correctamente.', 'success');
-
         this.hospital = { nombre: '', ubicacion: '', clues: '' };
         localStorage.removeItem('doctorTemporalCorreo');
         this.router.navigate(['/logindoctor']);
       },
-      error: async (err: any) => {
+      error: async err => {
         console.error('Error al agregar hospital', err);
         await Swal.fire('Error', 'Ocurrió un error al agregar el hospital.', 'error');
       }

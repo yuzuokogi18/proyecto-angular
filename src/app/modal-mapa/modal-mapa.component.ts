@@ -1,6 +1,6 @@
 /// <reference types="@types/google.maps" />
-import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Output, AfterViewInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-modal-mapa',
@@ -16,104 +16,113 @@ export class ModalMapaComponent implements AfterViewInit {
   selectedLatLng: string | null = null;
   selectedName: string | null = null;
   activeMarker: google.maps.Marker | null = null;
+  map!: google.maps.Map;
 
   ngAfterViewInit(): void {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        position => {
-          const userLocation: google.maps.LatLngLiteral = {
-            lat: position.coords.latitude,
-            lng: position.coords.longitude
-          };
+    const tuxtlaCoords: google.maps.LatLngLiteral = {
+      lat: 16.7521,
+      lng: -93.1161
+    };
 
-          console.log('Ubicación del usuario:', userLocation);
+    this.map = new google.maps.Map(this.mapElement.nativeElement, {
+      center: tuxtlaCoords,
+      zoom: 14,
+      disableDefaultUI: false
+    });
 
-          const map = new google.maps.Map(this.mapElement.nativeElement, {
-            center: userLocation,
-            zoom: 15
-          });
+    // Punto central
+    new google.maps.Marker({
+      position: tuxtlaCoords,
+      map: this.map,
+      title: 'Tuxtla Gutiérrez',
+      icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+    });
 
-          // Marcar ubicación actual del usuario (ícono verde)
-          new google.maps.Marker({
-            position: userLocation,
-            map: map,
-            title: 'Tu ubicación actual',
-            icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
-          });
+    // Buscar hospitales
+    const service = new google.maps.places.PlacesService(this.map);
+    service.nearbySearch({
+      location: tuxtlaCoords,
+      radius: 30000, // 30 km para incluir cercanos y lejanos
+      type: 'hospital'
+    }, (results, status) => {
+      if (status !== google.maps.places.PlacesServiceStatus.OK || !results) {
+        alert('No se encontraron hospitales en Tuxtla Gutiérrez.');
+        return;
+      }
 
-          // Buscar hospitales cercanos
-          const service = new google.maps.places.PlacesService(map);
-          service.nearbySearch({
-            location: userLocation,
-            radius: 15000, // Aumentado para asegurar más resultados
-            type: 'hospital'
-          }, (results, status) => {
-            console.log('Estado del nearbySearch:', status);
-            console.log('Resultados recibidos:', results);
+      results.forEach(place => {
+        if (!place.geometry || !(place.geometry.location instanceof google.maps.LatLng)) return;
 
-            if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-              for (let place of results) {
-                if (!place.geometry || !place.geometry.location) continue;
+        const location = place.geometry.location;
 
-                const hospitalMarker = new google.maps.Marker({
-                  position: place.geometry.location,
-                  map: map,
-                  title: place.name,
-                  icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png' // ícono rojo
-                });
+        const marker = new google.maps.Marker({
+          position: location,
+          map: this.map,
+          title: place.name,
+          icon: 'http://maps.google.com/mapfiles/ms/icons/red-dot.png'
+        });
 
-                const infoWindow = new google.maps.InfoWindow({
-                  content: `
-                    <strong>${place.name}</strong><br>
-                    ${place.vicinity || ''}<br>
-                    <a href="https://www.google.com/maps/search/?api=1&query=${place.geometry.location.lat()},${place.geometry.location.lng()}" target="_blank">
-                      Ver en Google Maps
-                    </a>
-                  `
-                });
+        const infoWindow = new google.maps.InfoWindow();
 
-                hospitalMarker.addListener('click', () => {
-                  infoWindow.open(map, hospitalMarker);
+        marker.addListener('click', () => {
+          if (this.activeMarker) {
+            this.activeMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+          }
 
-                  // Restaurar ícono anterior
-                  if (this.activeMarker) {
-                    this.activeMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
-                  }
+          marker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
+          this.activeMarker = marker;
 
-                  // Ícono azul para el seleccionado
-                  hospitalMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/blue-dot.png');
-                  this.activeMarker = hospitalMarker;
+          const lat = location.lat();
+          const lng = location.lng();
+          this.selectedLatLng = `${lat}, ${lng}`;
+          this.selectedName = place.name || '';
 
-                  const lat = place.geometry!.location!.lat();
-                  const lng = place.geometry!.location!.lng();
-                  this.selectedLatLng = `${lat}, ${lng}`;
-                  this.selectedName = place.name || '';
+          const content = `
+            <div>
+              <strong>${place.name}</strong><br>
+              ${place.vicinity || ''}<br>
+              Coordenadas: ${lat}, ${lng}<br><br>
+              <button id="selectLocationBtn" class="bg-blue-600 text-white px-2 py-1 mt-2 rounded text-sm">
+                Agregar esta ubicación
+              </button>
+            </div>
+          `;
 
-                  console.log('Seleccionado:', this.selectedName, this.selectedLatLng);
-                });
-              }
-            } else {
-              alert('No se encontraron hospitales cercanos.');
-              console.error('Error en nearbySearch:', status);
+          infoWindow.setContent(content);
+          infoWindow.open(this.map, marker);
+
+          // Escuchar botón dentro del InfoWindow
+          setTimeout(() => {
+            const btn = document.getElementById('selectLocationBtn');
+            if (btn) {
+              btn.addEventListener('click', () => this.confirmarUbicacion());
             }
-          });
-        },
-        error => {
-          console.error('Error al obtener ubicación del usuario:', error);
-          alert('Activa la ubicación para encontrar hospitales cercanos.');
-        }
-      );
-    } else {
-      alert('Tu navegador no soporta geolocalización.');
-    }
+          }, 0);
+        });
+      });
+    });
   }
 
   confirmarUbicacion() {
-    if (this.selectedLatLng && this.selectedName) {
-      const texto = `${this.selectedName} (${this.selectedLatLng})`;
-      this.locationSelected.emit(texto);
-    } else {
-      alert('Selecciona un hospital haciendo clic en el mapa.');
+    if (!this.selectedLatLng || !this.selectedName) {
+      alert('Debes seleccionar un hospital haciendo clic en el mapa.');
+      return;
     }
+
+    const texto = `${this.selectedName} (${this.selectedLatLng})`;
+    this.locationSelected.emit(texto.trim());
+
+    // Reset
+    this.selectedLatLng = null;
+    this.selectedName = null;
   }
+  cancelarSeleccion() {
+  if (this.activeMarker) {
+    this.activeMarker.setIcon('http://maps.google.com/mapfiles/ms/icons/red-dot.png');
+    this.activeMarker = null;
+  }
+  this.selectedLatLng = null;
+  this.selectedName = null;
+}
+
 }
