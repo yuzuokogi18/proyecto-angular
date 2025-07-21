@@ -12,6 +12,9 @@ import { EnfermeroLoginComponent } from './enfermero-login/enfermero-login.compo
 import { RegistroEnfermeroComponent } from './registro-enfermero/registro-enfermero.component';
 import { AgregarPacienteComponent } from './agregar-paciente/agregar-paciente.component';
 import { DoctorHomeComponent } from './doctor-home/doctor-home.component';
+import { SidebardoctorComponent } from './sidebardoctor/sidebardoctor.component';
+import { PatientsdoctorComponent } from './patientsdoctor/patientsdoctor.component';
+import { AsignarEnfermerosComponent } from './asignar-enfermeros/asignar-enfermeros.component';
 
 export const routes: Routes = [{ path: '', component:HomeComponent },
     { path: 'landing', component: LandingComponent },
@@ -23,9 +26,15 @@ export const routes: Routes = [{ path: '', component:HomeComponent },
      { path: 'welcomeenfermero', component: WelcomeenfermeroComponent },
     { path: 'enfermerologin', component: EnfermeroLoginComponent },
     { path: 'registroenfermero', component: RegistroEnfermeroComponent },
+     { path: 'asignarenfermeros', component: AsignarEnfermerosComponent },
 
   { path: 'agregarpaciente', component: AgregarPacienteComponent },
-   { path: 'doctorhome', component: DoctorHomeComponent }
+   { path: 'doctorhome', component: DoctorHomeComponent },
+   { path: 'sidebardoctor', component: SidebardoctorComponent },
+    { path: 'patientsdoctor', component: PatientsdoctorComponent },
+   
+
+
 
 
 

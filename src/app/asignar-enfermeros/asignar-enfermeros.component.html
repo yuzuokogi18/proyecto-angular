@@ -1,0 +1,42 @@
+<div class="flex min-h-screen bg-gray-50">
+  <main class="flex-1 p-8">
+    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-10">
+      <h2 class="text-3xl font-bold text-center text-blue-900 mb-8">
+        Asignar Enfermeros al Paciente
+      </h2>
+
+      <!-- Resumen -->
+      <div class="mb-6 text-center" *ngIf="enfermerosSeleccionados.length > 0">
+        <p class="text-lg text-gray-700">
+          Enfermeros seleccionados:
+          <span class="font-semibold text-blue-700">{{ mostrarResumen() }}</span>
+        </p>
+      </div>
+
+      <!-- Lista de enfermeros -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div *ngFor="let enfermero of enfermeros" class="flex items-center gap-4 bg-gray-100 p-4 rounded-xl shadow-sm">
+          <input
+            type="checkbox"
+            [value]="obtenerId(enfermero)"
+            (change)="toggleEnfermero($event)"
+            class="w-5 h-5 text-blue-600 rounded focus:ring focus:ring-blue-200"
+          />
+          <label class="text-gray-800 font-medium">
+            {{ enfermero.nombres }} {{ enfermero.apellido_p || enfermero.apellidos || enfermero.apellido }}
+          </label>
+        </div>
+      </div>
+
+      <!-- Botón de confirmar -->
+      <div class="mt-10 flex justify-center">
+        <button
+          (click)="confirmarAsignacion()"
+          class="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-3 px-10 rounded-full shadow-lg transition duration-300"
+        >
+          Confirmar Selección
+        </button>
+      </div>
+    </div>
+  </main>
+</div>

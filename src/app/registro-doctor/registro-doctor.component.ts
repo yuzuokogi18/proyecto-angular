@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Doctor } from '../models/doctor';
 import { DoctorService } from '../services/doctor.service';
 import { Router } from '@angular/router';
@@ -8,7 +9,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-registro-doctor',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './registro-doctor.component.html',
   styleUrl: './registro-doctor.component.css'
 })
@@ -28,71 +29,33 @@ export class RegistroDoctorComponent {
     private router: Router
   ) {}
 
-  async registrar() {
-    const nombreRegex = /^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$/;
-    const cedulaRegex = /^\d{7,8}$/;
-    const contrasenaRegex = /^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$/;
-
-    if (!nombreRegex.test(this.doctor.nombre)) {
-      await Swal.fire('Nombre inválido', 'El nombre solo puede contener letras.', 'error');
-      return;
-    }
-
-    if (!nombreRegex.test(this.doctor.apellido_p)) {
-      await Swal.fire('Apellido paterno inválido', 'Debe contener solo letras.', 'error');
-      return;
-    }
-
-    if (!nombreRegex.test(this.doctor.apellido_m)) {
-      await Swal.fire('Apellido materno inválido', 'Debe contener solo letras.', 'error');
-      return;
-    }
-
-    if (!cedulaRegex.test(this.doctor.cedula)) {
-      await Swal.fire('Cédula inválida', 'Debe tener 7 u 8 dígitos numéricos.', 'error');
-      return;
-    }
-
-    if (!this.validateEmail(this.doctor.correo)) {
-      await Swal.fire('Correo inválido', 'Ingresa un correo electrónico válido.', 'error');
-      return;
-    }
-
-    if (!contrasenaRegex.test(this.doctor.contrasena)) {
-      await Swal.fire('Contraseña débil', 'Debe tener al menos 8 caracteres, una mayúscula y un número. Ej: Doctor123', 'error');
-      return;
-    }
-
-    await Swal.fire({ title: 'Registrando...', icon: 'info', timer: 1000, showConfirmButton: false });
+  registrar(form: NgForm) {
+    if (form.invalid) return;
 
     this.doctorService.registrarDoctor(this.doctor).subscribe({
       next: async (res: any) => {
-        await Swal.fire('¡Registro exitoso!', 'Doctor registrado correctamente.', 'success');
+        console.log('✅ Doctor registrado:', this.doctor);
+
+        // ✅ Guardamos el nombre completo del doctor en localStorage
+        const nombreDoctor = `${this.doctor.nombre} ${this.doctor.apellido_p} ${this.doctor.apellido_m}`.trim();
+        localStorage.setItem('nombreDoctor', nombreDoctor);
+        console.log('🧠 Nombre del doctor guardado:', nombreDoctor);
+
+        // ✅ Guardamos correo por si se necesita después
         localStorage.setItem('doctorTemporalCorreo', this.doctor.correo);
-        this.resetFormulario();
-        this.router.navigate(['/agregarhospital']);
+
+        // ✅ Limpiamos hospital seleccionado si existía
+        localStorage.removeItem('hospitalSeleccionadoId');
+
+        await Swal.fire('¡Registro exitoso!', 'Doctor registrado correctamente.', 'success');
+
+        // ✅ Redirigimos al login
+        this.router.navigate(['/login']);
       },
-      error: async (err: any) => {
-        await Swal.fire('Error', 'No se pudo registrar. Intenta más tarde.', 'error');
+      error: err => {
         console.error('❌ Error en el registro:', err);
+        Swal.fire('❌ Error', 'Ocurrió un problema al registrar el doctor.', 'error');
       }
     });
-  }
-
-  resetFormulario() {
-    this.doctor = {
-      nombre: '',
-      apellido_p: '',
-      apellido_m: '',
-      correo: '',
-      contrasena: '',
-      cedula: '',
-      tipo: '1'
-    };
-  }
-
-  validateEmail(correo: string): boolean {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(correo);
   }
 }

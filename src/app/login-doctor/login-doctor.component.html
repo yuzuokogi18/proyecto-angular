@@ -1,37 +1,48 @@
-<div class="flex h-screen w-full bg-white font-junge">
-  <!-- Columna izquierda -->
-  <div class="w-1/2 relative flex flex-col items-center justify-center">
-    <div class="absolute top-6 left-6 z-50">
-      <img src="assets/logo2.png" alt="Pulse Sense" class="h-24 w-auto md:h-28" />
+<div class="flex flex-col lg:flex-row min-h-screen w-full bg-white font-[Junge]">
+  <!-- Columna izquierda / Imagen -->
+  <div class="w-full lg:w-1/2 relative flex flex-col items-center justify-center px-4 pt-24 pb-8 lg:pt-0 lg:px-0">
+    <!-- Logo -->
+    <div class="absolute top-4 left-4 z-50">
+      <img src="assets/logo2.png" alt="Pulse Sense" class="h-16 sm:h-20 md:h-24 lg:h-28 w-auto" />
     </div>
-    <img src="assets/logindoc.jpeg" alt="Doctores" class="w-[90%] max-w-[520px] mt-16" />
+    <img src="assets/logindoc.jpeg" alt="Doctores"
+        class="w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-[650px] mt-4 lg:mt-16" />
   </div>
 
   <!-- Formulario -->
-  <div class="w-1/2 flex flex-col justify-center px-20">
-    <h2 class="text-4xl font-bold text-[#03045E] mb-8 text-left">Iniciar Sesión Doctor</h2>
+  <div class="w-full lg:w-1/2 flex flex-col justify-center items-center px-6 sm:px-10 md:px-16 lg:px-20 py-8">
+    <h2 class="text-2xl sm:text-3xl md:text-4xl font-bold text-[#03045E] mb-6 sm:mb-8 text-left w-full max-w-md">
+      Iniciar Sesión Doctor
+    </h2>
 
-    <form (ngSubmit)="iniciarSesion()" #form="ngForm" class="flex flex-col gap-4 w-[85%] max-w-md">
+    <form (ngSubmit)="iniciarSesion()" #form="ngForm" class="flex flex-col gap-4 w-full max-w-md">
+      <!-- Correo -->
       <div>
-        <label for="email" class="block text-lg font-semibold text-gray-800 mb-1">Correo Electrónico:</label>
+        <label for="email" class="block text-sm sm:text-base font-semibold text-gray-800 mb-1">
+          Correo Electrónico:
+        </label>
         <input id="email" name="correo" [(ngModel)]="correo" type="email" required
-          class="w-full border border-gray-300 px-4 py-3 rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-200" />
+               class="w-full border border-gray-300 px-4 py-2.5 sm:py-3 rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-200 text-sm" />
       </div>
 
+      <!-- Contraseña -->
       <div>
-        <label for="password" class="block text-lg font-semibold text-gray-800 mb-1">Contraseña:</label>
+        <label for="password" class="block text-sm sm:text-base font-semibold text-gray-800 mb-1">
+          Contraseña:
+        </label>
         <input id="password" name="contrasena" [(ngModel)]="contrasena" type="password" required
-          class="w-full border border-gray-300 px-4 py-3 rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-200" />
+               class="w-full border border-gray-300 px-4 py-2.5 sm:py-3 rounded-md bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-200 text-sm" />
       </div>
 
-      <!-- Botón que ejecuta el login -->
+      <!-- Botón de login -->
       <button type="submit"
-        class="mt-3 w-full bg-[#1D4ED8] text-white py-3 rounded-md font-semibold hover:bg-[#153dc4] transition">
+              class="mt-3 w-full bg-[#1D4ED8] text-white py-2.5 sm:py-3 rounded-md font-semibold hover:bg-[#153dc4] transition text-sm sm:text-base">
         Iniciar Sesión
       </button>
     </form>
 
-    <p class="mt-4 text-sm">
+    <!-- Registro -->
+    <p class="mt-4 text-sm text-center">
       ¿No tienes cuenta aún?
       <a [routerLink]="['/registrodoctor']" class="text-blue-600 italic hover:underline">Regístrate</a>
     </p>

@@ -1,12 +1,12 @@
-<div class="min-h-screen bg-white flex items-center justify-center px-6 font-[Junge] relative">
+<div class="min-h-screen bg-white px-6 py-10 font-[Junge] relative overflow-visible">
 
-  <!-- Logo visible sin fondo ni sombra -->
+  <!-- Logo -->
   <div class="absolute top-6 left-6 z-50">
     <img src="assets/logo2.png" alt="Pulse Sense" class="h-24 w-auto md:h-28" />
   </div>
 
   <!-- Contenedor principal -->
-  <div class="grid grid-cols-1 md:grid-cols-[55%_45%] items-center gap-10 w-full max-w-[1400px]">
+  <div class="grid grid-cols-1 md:grid-cols-[55%_45%] items-center gap-10 w-full max-w-[1400px] mx-auto">
 
     <!-- Imagen ilustrativa -->
     <div class="flex justify-center items-center">
@@ -15,47 +15,71 @@
 
     <!-- Formulario -->
     <div class="w-full max-w-sm flex flex-col justify-start md:pl-4">
-      
+
       <h1 class="text-4xl md:text-5xl font-bold text-[#03045E] mb-6">
         ¡Bienvenido, doctor!
       </h1>
 
       <p class="text-xl text-gray-700 mb-6">Busca tu hospital para ingresar</p>
 
-      <!-- Input con ícono -->
-      <div class="relative mb-4">
+      <!-- Input de búsqueda con autocompletado -->
+      <div class="relative z-50 mb-4 w-full">
         <input 
-          type="text" 
-          placeholder="Ejemplo. Hospital San Miguel"
-          class="w-full py-3 px-4 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1D4ED8] placeholder-gray-400"
+          type="text"
+          [(ngModel)]="textoBusqueda"
+          (input)="buscarDesdeEvento($event)"
+          placeholder="Ej. Hospital San Miguel"
+          class="w-full py-3 px-4 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-[#1D4ED8] placeholder-gray-400"
         />
-        <div class="absolute inset-y-0 right-0 flex items-center pr-3 text-[#1D4ED8]">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none"
-               viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M14 5l7 7m0 0l-7 7m7-7H3" />
-          </svg>
-        </div>
+
+        <!-- Resultados con nombre, ubicación y clues -->
+        <ul *ngIf="hospitales.length > 0" 
+            class="absolute left-0 right-0 z-50 bg-white border border-gray-300 rounded-md mt-1 shadow-md max-h-60 overflow-y-auto">
+          <li 
+            *ngFor="let hospital of hospitales" 
+            (click)="seleccionarHospital(hospital)"
+            class="px-4 py-2 cursor-pointer hover:bg-blue-100 transition-colors border-b last:border-b-0">
+            
+            <!-- Nombre -->
+            <div class="font-semibold text-gray-800">
+              {{ hospital.nombre || 'Sin nombre' }}
+            </div>
+
+            <!-- Ubicación -->
+            <div *ngIf="hospital.ubicacion" class="text-sm text-gray-600 mt-0.5">
+              📍 {{ hospital.ubicacion }}
+            </div>
+
+            <!-- CLUES -->
+            <div *ngIf="hospital.clues" class="text-sm text-gray-600">
+              🆔 CLUES: {{ hospital.clues }}
+            </div>
+          </li>
+        </ul>
+
+        <!-- Sin resultados -->
+        <p *ngIf="escribiendo && textoBusqueda.length > 1 && hospitales.length === 0" 
+           class="text-sm text-gray-500 mt-2">
+          No se encontraron hospitales.
+        </p>
       </div>
 
       <p class="text-sm text-center text-gray-600 mb-6">
         ¿No ves tu hospital?
       </p>
 
-    <a [routerLink]="['/agregarhospital']"
-   class="w-full bg-[#1D4ED8] text-white py-3 rounded-md font-semibold hover:bg-[#153dc4] mb-4 transition text-center block">
-  Agrega Tu Hospital
-</a>
+      <!-- Botón para agregar hospital -->
+      <a [routerLink]="['/agregarhospital']"
+         class="w-full bg-[#1D4ED8] text-white py-3 rounded-md font-semibold hover:bg-[#153dc4] mb-4 transition text-center block">
+        Agrega Tu Hospital
+      </a>
 
-
-
-        <a 
-  routerLink="/logindoctor"
-  class="block w-full border border-[#1D4ED8] text-[#1D4ED8] text-center py-3 rounded-md font-semibold hover:bg-blue-50 transition duration-200">
-  Continuar
-</a>
-
-
+      <!-- Botón continuar -->
+      <a 
+        [routerLink]="['/logindoctor']"
+        class="block w-full border border-[#1D4ED8] text-[#1D4ED8] text-center py-3 rounded-md font-semibold hover:bg-blue-50 transition duration-200">
+        Continuar
+      </a>
     </div>
   </div>
 </div>

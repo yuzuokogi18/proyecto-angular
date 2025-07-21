@@ -7,6 +7,7 @@ import { FormsModule } from '@angular/forms';
 import { Hospital } from '../models/Hospital';
 import { HospitalService } from '../services/hospital.service';
 import Swal from 'sweetalert2';
+import { WorkerService } from '../services/worker.service';
 
 @Component({
   selector: 'app-agregarhospital',
@@ -26,6 +27,7 @@ export class AgregarhospitalComponent {
 
   constructor(
     private hospitalService: HospitalService,
+    private workerService: WorkerService,
     private router: Router
   ) {}
 
@@ -34,7 +36,7 @@ export class AgregarhospitalComponent {
   }
 
   onUbicacionSeleccionada(direccion: string) {
-    console.log('Ubicación recibida:', direccion);
+    console.log('📍 Ubicación recibida:', direccion);
     this.hospital.ubicacion = direccion;
     this.showMap = false;
   }
@@ -72,14 +74,43 @@ export class AgregarhospitalComponent {
     Swal.fire({ title: 'Registrando hospital...', icon: 'info', timer: 1000, showConfirmButton: false });
 
     this.hospitalService.agregarHospital(hospitalConDoctor).subscribe({
-      next: async () => {
+      next: async (res: any) => {
+        const idHospital = res?.id;
+        const idUsuario = res?.doctor?.id || res?.doctor_id;
+
+        console.log('📝 ID hospital registrado:', idHospital);
+        console.log('👨‍⚕️ ID doctor:', idUsuario);
+
+        // ✅ GUARDAR EL HOSPITAL COMO SELECCIONADO PARA FUTURA RELACIÓN
+        if (idHospital) {
+          localStorage.setItem('hospitalSeleccionadoId', idHospital.toString());
+        }
+
+        if (idHospital && idUsuario) {
+          const relacion = { id_usuario: idUsuario, id_hospital: idHospital };
+
+          this.workerService.relacionarDoctorConHospital(relacion).subscribe({
+            next: () => {
+              console.log('✅ Relación hospital-doctor creada correctamente:', relacion);
+              Swal.fire('✅ Asociación completa', 'El hospital ha sido asociado al doctor correctamente.', 'success');
+            },
+            error: (err: any) => {
+              console.error('❌ Error al asociar hospital:', err);
+              Swal.fire('❌ Error', 'No se pudo asociar el hospital al doctor.', 'error');
+            }
+          });
+        }
+
         await Swal.fire('¡Registro exitoso!', 'El hospital fue agregado correctamente.', 'success');
         this.hospital = { nombre: '', ubicacion: '', clues: '' };
+
         localStorage.removeItem('doctorTemporalCorreo');
+
+        // ✅ REDIRECCIÓN AL LOGIN DONDE YA ESTARÁ SELECCIONADO EL HOSPITAL
         this.router.navigate(['/logindoctor']);
       },
       error: async err => {
-        console.error('Error al agregar hospital', err);
+        console.error('❌ Error al agregar hospital:', err);
         await Swal.fire('Error', 'Ocurrió un error al agregar el hospital.', 'error');
       }
     });

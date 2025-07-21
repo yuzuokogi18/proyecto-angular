@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Doctor } from '../models/doctor';
 import { DoctorService } from '../services/doctor.service';
 import { FormsModule } from '@angular/forms';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-registro-enfermero',
@@ -21,7 +22,10 @@ export class RegistroEnfermeroComponent {
     tipo: '2' // Tipo 2 = enfermero
   };
 
-  constructor(private doctorService: DoctorService) {}
+  constructor(
+    private doctorService: DoctorService,
+    private router: Router
+  ) {}
 
   registrar() {
     alert('🟡 Registrando enfermero...');
@@ -31,6 +35,7 @@ export class RegistroEnfermeroComponent {
         console.log('✔️ Registro exitoso:', res);
         alert('✅ ¡Enfermero registrado correctamente!');
         this.resetFormulario();
+        this.router.navigate(['/welcomeenfermero']); // Redirección automática
       },
       error: (err: any) => {
         console.error('❌ Error en el registro:', err);
@@ -50,5 +55,4 @@ export class RegistroEnfermeroComponent {
       tipo: '2'
     };
   }
-
 }

@@ -1,14 +1,12 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Doctor } from '../models/doctor';
 import { Credenciales } from '../models/credenciales';
 
-
 @Injectable({
   providedIn: 'root'
 })
-
 export class DoctorService {
   private apiUrl = 'http://52.206.26.124';
 
@@ -19,7 +17,19 @@ export class DoctorService {
   }
 
   loginDoctor(data: Credenciales): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`, data); 
+    return this.http.post(`${this.apiUrl}/auth/login`, data, { observe: 'response' }); 
   }
-  
+
+  getPacientesPorDoctor(idDoctor: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`http://54.87.61.241:8080/doctor/patient/user/${idDoctor}`, { headers });
+  }
+  getEnfermerosPorPaciente(idPaciente: number): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.get<any>(`http://54.87.61.241:8080/users/nurses/patient/${idPaciente}`, { headers });
+}
+
+
 }
