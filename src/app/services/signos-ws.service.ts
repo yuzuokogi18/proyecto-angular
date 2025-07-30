@@ -9,7 +9,7 @@ export class SignosWsService {
   private subject = new Subject<any>();
 
   conectar(token: string) {
-    const wsUrl = `ws://54.87.61.241:8080/ws/connect?token=${token}`;
+    const wsUrl = `https://pulsesenseapi.ddns.net/ws/connect?token=${token}`;
     console.log('🔌 Conectando al WebSocket con URL:', wsUrl);
     this.socket = new WebSocket(wsUrl);
 

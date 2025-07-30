@@ -7,7 +7,7 @@ import { Sign } from '../models/sign.model';
   providedIn: 'root'
 })
 export class SignsService {
-  private apiUrl = 'http://54.87.61.241:8080/signs/patient';
+  private apiUrl = 'https://pulsesenseapi.ddns.net/signs/patient';
 
   constructor(private http: HttpClient) {}
 

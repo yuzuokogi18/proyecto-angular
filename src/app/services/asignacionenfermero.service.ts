@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class AsignacionEnfermeroService {
-  private baseUrl = 'http://54.87.61.241:8080/nurse/patient/user';
+  private baseUrl = 'https://pulsesenseapi.ddns.net/nurse/patient/user';
 
   constructor(private http: HttpClient) {}
 

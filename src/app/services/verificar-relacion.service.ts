@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class VerificarRelacionService {
-  private apiUrl = 'http://54.87.61.241:8080/workers/verify';
+  private apiUrl = 'https://pulsesenseapi.ddns.net/workers/verify';
 
   constructor(private http: HttpClient) {}
 

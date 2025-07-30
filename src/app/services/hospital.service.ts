@@ -7,7 +7,7 @@ import { Hospital } from '../models/Hospital';
   providedIn: 'root'
 })
 export class HospitalService {
-  private apiUrl = 'http://54.87.61.241:8080/hospitals';
+  private apiUrl = 'https://pulsesenseapi.ddns.net/hospitals';
 
   constructor(private http: HttpClient) {}
 

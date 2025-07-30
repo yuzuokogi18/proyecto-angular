@@ -8,7 +8,7 @@ import { Credenciales } from '../models/credenciales';
   providedIn: 'root'
 })
 export class DoctorService {
-  private apiUrl = 'http://52.206.26.124';
+  private apiUrl = 'https://pulsesenseapiusers.zapto.org';
 
   constructor(private http: HttpClient) {}
 
@@ -23,22 +23,22 @@ export class DoctorService {
   getPacientesPorDoctor(idDoctor: number): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any>(`http://54.87.61.241:8080/doctor/patient/user/${idDoctor}`, { headers });
+    return this.http.get<any>(`https://pulsesenseapi.ddns.net/doctor/patient/user/${idDoctor}`, { headers });
   }
   getEnfermerosPorPaciente(idPaciente: number): Observable<any> {
   const token = localStorage.getItem('token');
   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  return this.http.get<any>(`http://54.87.61.241:8080/users/nurses/patient/${idPaciente}`, { headers });
+  return this.http.get<any>(`https://pulsesenseapi.ddns.net/users/nurses/patient/${idPaciente}`, { headers });
 }
  getPacientesPorEnfermero(idEnfermero: number): Observable<any> {
   const token = localStorage.getItem('token');
   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  return this.http.get<any>(`http://54.87.61.241:8080/nurse/patient/user/${idEnfermero}`, { headers });
+  return this.http.get<any>(`https://pulsesenseapi.ddns.net/nurse/patient/user/${idEnfermero}`, { headers });
 }
   getEnfermerosPorDoctor(idDoctor: number): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get<any>(`http://54.87.61.241:8080/nursepatient/${idDoctor}`, { headers });
+    return this.http.get<any>(`https://pulsesenseapi.ddns.net/nursepatient/${idDoctor}`, { headers });
   }
 
 

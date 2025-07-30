@@ -8,7 +8,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class CaregiverService {
-  private baseUrl = 'http://54.87.61.241:8080';
+  private baseUrl = 'https://pulsesenseapi.ddns.net';
 
   constructor(private http: HttpClient) {}
 
