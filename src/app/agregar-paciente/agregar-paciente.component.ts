@@ -42,25 +42,15 @@ export class AgregarPacienteComponent {
     private router: Router
   ) {}
 
-  agregarPaciente() {
+  agregarPaciente(form: any) {
+    if (!form.valid) {
+      Swal.fire('Error', 'Por favor corrige los errores del formulario antes de continuar', 'error');
+      return;
+    }
+
     const idDoctor = Number(localStorage.getItem('iduser') || localStorage.getItem('doctorId'));
-    console.log('🩺 ID Doctor obtenido:', idDoctor);
-
-    const camposCompletos =
-      this.paciente.nombres.trim() &&
-      this.paciente.apellido_p.trim() &&
-      this.paciente.apellido_m.trim() &&
-      this.paciente.nacimiento &&
-      this.paciente.peso !== null &&
-      this.paciente.estatura !== null &&
-      this.paciente.sexo &&
-      Number(this.paciente.id_tipo_sangre) > 0 &&
-      this.paciente.numero_emergencia.trim() &&
-      idDoctor > 0;
-
-    if (!camposCompletos) {
-      console.error('❌ Faltan campos obligatorios o ID del doctor');
-      Swal.fire('Error', 'Por favor completa todos los campos', 'error');
+    if (idDoctor <= 0) {
+      Swal.fire('Error', 'No se encontró el ID del doctor', 'error');
       return;
     }
 
@@ -74,30 +64,23 @@ export class AgregarPacienteComponent {
 
     this.pacienteService.crearPaciente(data).subscribe({
       next: (res: any) => {
-        console.log('🧩 Respuesta completa del backend al crear paciente:', res);
         const idPaciente = res?.id_paciente || res?.id || res?.data?.id_paciente || res?.data?.id;
 
-        console.log('📥 ID extraído del paciente:', idPaciente);
-
         if (!idPaciente || isNaN(Number(idPaciente))) {
-          console.error('❌ No se recibió un ID válido del paciente');
           Swal.fire('Error', 'No se pudo obtener el ID del paciente', 'error');
           return;
         }
 
-        // ✅ Guardamos nombre completo del paciente en localStorage
         const nombrePaciente = `${this.paciente.nombres} ${this.paciente.apellido_p} ${this.paciente.apellido_m}`;
         localStorage.setItem('nombrePaciente', nombrePaciente);
 
         Swal.fire('Éxito', 'Paciente agregado correctamente', 'success').then(() => {
-          console.log('📤 Navegando a asignarenfermeros con ID paciente:', idPaciente);
           this.router.navigate(['/asignarenfermeros'], {
             queryParams: { pacienteId: idPaciente }
           });
         });
       },
-      error: (err: any) => {
-        console.error('❌ Error al agregar paciente:', err);
+      error: () => {
         Swal.fire('Error', 'No se pudo agregar el paciente', 'error');
       }
     });

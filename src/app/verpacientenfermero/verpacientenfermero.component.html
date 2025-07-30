@@ -1,0 +1,101 @@
+<div class="flex flex-col lg:flex-row min-h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <div class="w-full lg:w-64">
+    <app-sidebarenfermero></app-sidebarenfermero>
+  </div>
+
+  <!-- Contenido -->
+  <div class="flex-1 p-4 sm:p-6 md:p-8">
+    <!-- Encabezado superior -->
+    <div class="flex justify-between items-center mb-6">
+      <!-- Paciente -->
+      <div class="flex items-center gap-4">
+        <div class="bg-[#A6C2F0] rounded-full w-12 h-12 flex items-center justify-center text-[#2F65BB] font-bold text-2xl">
+          👤
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Paciente</p>
+          <p class="text-lg font-bold truncate max-w-[220px]">
+            {{ pacientePrincipal }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Enfermero -->
+      <div class="text-right">
+        <p class="text-sm text-gray-500">👨‍⚕️ Enfermero</p>
+        <p class="text-lg font-bold">{{ enfermero }}</p>
+      </div>
+    </div>
+
+    <!-- Título -->
+    <h2 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-[#2F65BB]">Pacientes Asignados</h2>
+
+    <!-- Búsqueda -->
+    <div class="mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <input
+        type="text"
+        [(ngModel)]="filtro"
+        placeholder="Buscar paciente"
+        class="w-full md:w-1/2 px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+        (input)="buscarPaciente()"
+      />
+    </div>
+
+    <!-- Tabla -->
+    <div class="overflow-x-auto rounded-lg shadow border border-gray-200">
+      <table class="min-w-full bg-white text-sm text-left">
+        <thead class="bg-[#2F65BB] text-white">
+          <tr>
+            <th class="px-4 sm:px-6 py-3">Nombre</th>
+            <th class="px-4 sm:px-6 py-3">Edad</th>
+            <th class="px-4 sm:px-6 py-3">Sexo</th>
+            <th class="px-4 sm:px-6 py-3">Tipo de Sangre</th>
+            <th class="px-4 sm:px-6 py-3">Talla</th>
+            <th class="px-4 sm:px-6 py-3">Peso</th>
+            <th class="px-4 sm:px-6 py-3">Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr
+            *ngFor="let paciente of pacientesFiltrados"
+            class="border-b hover:bg-gray-50"
+            [ngClass]="{ 'bg-blue-50 font-semibold': paciente.actual }"
+          >
+            <td class="px-4 sm:px-6 py-4 text-gray-800">
+              {{ paciente.nombres }} {{ paciente.apellido_p }} {{ paciente.apellido_m }}
+            </td>
+            <td class="px-4 sm:px-6 py-4">{{ calcularEdad(paciente.nacimiento) }} años</td>
+            <td class="px-4 sm:px-6 py-4">{{ paciente.sexo === 'M' ? 'Hombre' : 'Mujer' }}</td>
+            <td class="px-4 sm:px-6 py-4">{{ obtenerTipoSangre(paciente.id_tipo_sangre) }}</td>
+            <td class="px-4 sm:px-6 py-4">{{ paciente.estatura }} cm</td>
+            <td class="px-4 sm:px-6 py-4">{{ paciente.peso }} kg</td>
+            <td class="px-4 sm:px-6 py-4">
+              <div class="flex flex-col gap-2">
+                <!-- Estado actual -->
+                <span
+                  *ngIf="paciente.actual"
+                  class="inline-flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1 rounded-full border border-green-300 text-xs font-medium"
+                >
+                  ✅ Actual
+                </span>
+
+                <!-- Botón para cambiar -->
+                <button
+                  *ngIf="!paciente.actual"
+                  (click)="cambiarPacienteActual(paciente)"
+                  class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 text-xs font-medium transition"
+                >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M12.293 2.293a1 1 0 011.414 0L17 5.586V8h-2.414l-3.293-3.293a1 1 0 010-1.414zM11 9l5 5H9v-2h2V9zM6 10v6h6v2H6a2 2 0 01-2-2v-6h2z" />
+                  </svg>
+                  Cambiar a este paciente
+                </button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

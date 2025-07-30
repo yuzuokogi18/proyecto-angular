@@ -30,6 +30,16 @@ export class DoctorService {
   const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
   return this.http.get<any>(`http://54.87.61.241:8080/users/nurses/patient/${idPaciente}`, { headers });
 }
+ getPacientesPorEnfermero(idEnfermero: number): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+  return this.http.get<any>(`http://54.87.61.241:8080/nurse/patient/user/${idEnfermero}`, { headers });
+}
+  getEnfermerosPorDoctor(idDoctor: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`http://54.87.61.241:8080/nursepatient/${idDoctor}`, { headers });
+  }
 
 
 }

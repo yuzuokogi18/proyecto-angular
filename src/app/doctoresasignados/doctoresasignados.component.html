@@ -1,0 +1,67 @@
+<div class="flex min-h-screen bg-gray-50">
+  <!-- Sidebar a la izquierda -->
+  <div class="w-64">
+    <app-sidebarenfermero></app-sidebarenfermero>
+  </div>
+
+  <!-- Contenido a la derecha -->
+  <div class="flex-1 p-8 overflow-auto">
+    <!-- Encabezado superior -->
+    <div class="flex justify-between items-center mb-6">
+      <!-- Paciente -->
+      <div class="flex items-center gap-4">
+      <div class="bg-[#A6C2F0] rounded-full w-12 h-12 flex items-center justify-center text-[#2F65BB] font-bold text-2xl">
+          👤
+        </div>
+        <div>
+          <p class="text-sm text-gray-600">Paciente</p>
+          <p class="text-lg font-bold truncate max-w-[220px]">
+            {{ paciente }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Enfermero -->
+      <div class="text-right">
+        <p class="text-sm text-gray-500">👨‍⚕️ Enfermero</p>
+        <p class="text-lg font-bold">{{ enfermero }}</p>
+      </div>
+    </div>
+
+    <!-- Título -->
+    <h2 class="text-2xl font-semibold mb-6 text-[#2F65BB]">Doctores Asignados</h2>
+
+    <!-- Indicadores de estado -->
+    <div *ngIf="loading" class="text-gray-600">Cargando doctores...</div>
+    <div *ngIf="error" class="text-red-500">{{ error }}</div>
+
+    <!-- Tabla de doctores asignados -->
+    <div *ngIf="doctores.length > 0" class="overflow-x-auto rounded-lg shadow border border-gray-200">
+      <table class="min-w-full bg-white text-sm text-left">
+        <thead class="bg-[#2F65BB] text-white">
+          <tr>
+            <th class="px-4 sm:px-6 py-3">Doctor</th>
+            <th class="px-4 sm:px-6 py-3">Correo</th>
+            <th class="px-4 sm:px-6 py-3">Paciente Asignado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of doctores" class="border-b hover:bg-gray-50">
+            <td class="px-4 sm:px-6 py-4 text-gray-800 font-medium">
+              Dr. {{ item.doctor_nombre }} {{ item.doctor_apellido_p }} {{ item.doctor_apellido_m }}
+            </td>
+            <td class="px-4 sm:px-6 py-4">{{ item.doctor_correo }}</td>
+            <td class="px-4 sm:px-6 py-4">
+              {{ item.paciente_nombre }} {{ item.paciente_apellido_p }} {{ item.paciente_apellido_m }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Sin resultados -->
+    <div *ngIf="!loading && doctores.length === 0 && !error" class="text-gray-500 mt-6">
+      No se encontraron doctores asignados.
+    </div>
+  </div>
+</div>

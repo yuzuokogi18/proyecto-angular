@@ -1,38 +1,39 @@
-<div class="flex min-h-screen bg-white relative font-[Junge]">
+<div class="flex flex-col md:flex-row min-h-screen bg-white relative font-[Junge]">
+
   <!-- Logo -->
-  <div class="absolute top-6 left-6 z-50">
-    <img src="assets/logo2.png" alt="Pulse Sense" class="h-24 w-auto md:h-28" />
+  <div class="absolute top-4 left-4 md:top-6 md:left-6 z-50">
+    <img src="assets/logo2.png" alt="Pulse Sense" class="h-20 md:h-24 w-auto" />
   </div>
 
   <!-- Imagen enfermeros -->
-  <div class="w-1/2 flex items-center justify-center">
-    <img src="assets/enferregis.png" alt="Enfermeros" class="w-[90%] max-w-[520px] mt-16" />
+  <div class="w-full md:w-1/2 flex items-center justify-center px-6 mt-24 md:mt-16">
+    <img src="assets/enferregis.png" alt="Enfermeros" class="w-full max-w-xs md:max-w-[520px]" />
   </div>
 
   <!-- Formulario -->
-  <div class="w-1/2 flex flex-col justify-center px-20">
-    <h2 class="text-4xl font-bold text-[#03045E] mb-8 text-left">Registrarse Enfermero</h2>
+  <div class="w-full md:w-1/2 flex flex-col justify-center px-6 md:px-20 py-10 md:py-0">
+    <h2 class="text-2xl md:text-4xl font-bold text-[#03045E] mb-8 text-left">Registrarse Enfermero</h2>
 
-    <form (ngSubmit)="registrar()" #form="ngForm" class="flex flex-col gap-4 w-[85%] max-w-md">
-      
+    <form (ngSubmit)="registrar()" #form="ngForm" class="flex flex-col gap-4 w-full max-w-md">
+
       <!-- Nombre -->
       <div>
-        <label class="block text-lg font-semibold text-gray-800 mb-1">Nombre:</label>
+        <label class="block text-base md:text-lg font-semibold text-gray-800 mb-1">Nombre:</label>
         <input [(ngModel)]="enfermero.nombre" name="nombre" type="text" required
           class="w-full border px-4 py-3 rounded-md" />
       </div>
 
-      <!-- Apellidos lado a lado -->
-      <div class="flex gap-4">
+      <!-- Apellidos lado a lado en desktop -->
+      <div class="flex flex-col md:flex-row gap-4">
         <!-- Apellido Paterno -->
-        <div class="w-1/2">
+        <div class="w-full md:w-1/2">
           <label class="block text-base font-semibold text-gray-800 mb-1">Apellido Paterno:</label>
           <input [(ngModel)]="enfermero.apellido_p" name="apellido_p" type="text" required
             class="w-full border px-3 py-2 rounded-md" />
         </div>
 
         <!-- Apellido Materno -->
-        <div class="w-1/2">
+        <div class="w-full md:w-1/2">
           <label class="block text-base font-semibold text-gray-800 mb-1">Apellido Materno:</label>
           <input [(ngModel)]="enfermero.apellido_m" name="apellido_m" type="text" required
             class="w-full border px-3 py-2 rounded-md" />
@@ -41,21 +42,21 @@
 
       <!-- Cédula -->
       <div>
-        <label class="block text-lg font-semibold text-gray-800 mb-1">Cédula Profesional:</label>
+        <label class="block text-base md:text-lg font-semibold text-gray-800 mb-1">Cédula Profesional:</label>
         <input [(ngModel)]="enfermero.cedula" name="cedula" type="text" required
           class="w-full border px-4 py-3 rounded-md" />
       </div>
 
       <!-- Correo -->
       <div>
-        <label class="block text-lg font-semibold text-gray-800 mb-1">Correo:</label>
+        <label class="block text-base md:text-lg font-semibold text-gray-800 mb-1">Correo:</label>
         <input [(ngModel)]="enfermero.correo" name="correo" type="email" required
           class="w-full border px-4 py-3 rounded-md bg-blue-50" />
       </div>
 
       <!-- Contraseña -->
       <div>
-        <label class="block text-lg font-semibold text-gray-800 mb-1">Contraseña:</label>
+        <label class="block text-base md:text-lg font-semibold text-gray-800 mb-1">Contraseña:</label>
         <input [(ngModel)]="enfermero.contrasena" name="contrasena" type="password" required
           class="w-full border px-4 py-3 rounded-md" />
       </div>

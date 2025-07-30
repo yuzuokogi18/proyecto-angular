@@ -20,31 +20,48 @@
                class="w-full border border-gray-300 px-4 py-3 rounded-md focus:ring-2 focus:ring-[#1D4ED8] focus:outline-none" />
       </div>
 
-      <div class="mb-5 w-full">
-        <label for="ubicacion" class="block text-lg font-semibold text-gray-800 mb-1">
-          Ubicación:
-        </label>
-        <input type="text" id="ubicacion"
-               [(ngModel)]="hospital.ubicacion"
-               class="w-full border border-gray-300 px-4 py-3 rounded-md focus:ring-2 focus:ring-[#1D4ED8] focus:outline-none" />
-        <a (click)="abrirMapa()" class="text-sm text-blue-600 mt-1 inline-block hover:underline cursor-pointer">
-          Agregar por Google Maps
-        </a>
-      </div>
+    <div class="mb-5 w-full">
+  <label for="ubicacion" class="block text-lg font-semibold text-gray-800 mb-1">
+    Ubicación:
+  </label>
+  <input
+    type="text"
+    id="ubicacion"
+    [(ngModel)]="hospital.ubicacion"
+    class="w-full border border-gray-300 px-4 py-3 rounded-md focus:ring-2 focus:ring-[#1D4ED8] focus:outline-none"
+/>
+  <a (click)="abrirMapa()"
+     class="text-sm text-blue-600 mt-1 inline-block hover:underline cursor-pointer">
+    Agregar por Google Maps
+  </a>
+</div>
+
 
       <app-modal-mapa
         *ngIf="showMap"
         (locationSelected)="onUbicacionSeleccionada($event)">
       </app-modal-mapa>
 
-      <div class="mb-8 w-full">
-        <label for="clues" class="block text-lg font-semibold text-gray-800 mb-1">
-          Clues (Clave oficial):
-        </label>
-        <input type="text" id="clues" placeholder="Ej. 20EJ1234"
-               [(ngModel)]="hospital.clues"
-               class="w-full border border-gray-300 px-4 py-3 rounded-md focus:ring-2 focus:ring-[#1D4ED8] focus:outline-none" />
-      </div>
+<div class="mb-8 w-full">
+  <label for="clues" class="block text-lg font-semibold text-gray-800 mb-1">
+    Clues (Clave oficial):
+  </label>
+  <input
+    type="text"
+    id="clues"
+    placeholder="Ej. HGIMB002304"
+    [(ngModel)]="hospital.clues"
+    name="clues"
+    required
+    pattern="^[A-Z]{5}[0-9]{6}$"
+    #cluesInput="ngModel"
+    class="w-full border border-gray-300 px-4 py-3 rounded-md focus:ring-2 focus:ring-[#1D4ED8] focus:outline-none"
+  />
+  <p *ngIf="cluesInput.invalid && cluesInput.touched" class="text-red-600 mt-1 text-sm">
+    La CLUES debe tener 5 letras seguidas de 6 números. Ejemplo: HGIMB002304
+  </p>
+</div>
+
 
       <button (click)="agregarHospital()"
               class="w-full block text-center bg-[#1D4ED8] text-white py-3 rounded-md font-semibold hover:bg-[#153dc4] transition">

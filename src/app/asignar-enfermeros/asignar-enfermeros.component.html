@@ -1,6 +1,6 @@
 <div class="flex min-h-screen bg-gray-50">
   <main class="flex-1 p-8">
-    <div class="max-w-4xl mx-auto bg-white shadow-xl rounded-2xl p-10">
+    <div class="max-w-5xl mx-auto bg-white shadow-xl rounded-2xl p-10">
       <h2 class="text-3xl font-bold text-center text-blue-900 mb-8">
         Asignar Enfermeros al Paciente
       </h2>
@@ -13,26 +13,76 @@
         </p>
       </div>
 
-      <!-- Lista de enfermeros -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div *ngFor="let enfermero of enfermeros" class="flex items-center gap-4 bg-gray-100 p-4 rounded-xl shadow-sm">
-          <input
-            type="checkbox"
-            [value]="obtenerId(enfermero)"
-            (change)="toggleEnfermero($event)"
-            class="w-5 h-5 text-blue-600 rounded focus:ring focus:ring-blue-200"
-          />
-          <label class="text-gray-800 font-medium">
-            {{ enfermero.nombres }} {{ enfermero.apellido_p || enfermero.apellidos || enfermero.apellido }}
-          </label>
-        </div>
+      <!-- Tabla de enfermeros -->
+      <div class="overflow-x-auto mt-6">
+        <table class="min-w-full bg-white rounded-xl shadow-sm">
+          <thead class="bg-blue-900 text-white">
+            <tr>
+              <th class="text-left p-4">Seleccionar</th>
+              <th class="text-left p-4">Nombre del Enfermero</th>
+              <th class="text-left p-4">Turno</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr
+              *ngFor="let enfermero of enfermerosPaginados()"
+              class="border-b hover:bg-gray-50 transition duration-200"
+            >
+              <td class="p-4">
+                <input
+                  type="checkbox"
+                  [value]="obtenerId(enfermero)"
+                  (change)="toggleEnfermero($event)"
+                  [checked]="enfermerosSeleccionados.includes(obtenerId(enfermero).toString())"
+                  class="w-5 h-5 text-blue-600 rounded focus:ring focus:ring-blue-200"
+                />
+              </td>
+              <td class="p-4 font-medium text-gray-800">
+                {{ enfermero.nombres }} {{ enfermero.apellido_p || enfermero.apellidos || enfermero.apellido }}
+              </td>
+              <td class="p-4">
+                <select
+                  *ngIf="enfermerosSeleccionados.includes(obtenerId(enfermero).toString())"
+                  class="block w-full rounded-md border-gray-300 shadow-sm"
+                  [value]="getTurnoAsignado(obtenerId(enfermero))"
+                  (change)="onTurnoChange($event, obtenerId(enfermero))"
+                >
+                  <option value="" disabled>Selecciona turno</option>
+                  <option
+                    *ngFor="let turno of turnosDisponibles"
+                    [value]="turno"
+                    [disabled]="isTurnoAsignado(turno) && getTurnoAsignado(obtenerId(enfermero)) !== turno"
+                  >
+                    {{ turno | titlecase }}
+                  </option>
+                </select>
+              </td>
+            </tr>
+          </tbody>
+        </table>
       </div>
 
-      <!-- Botón de confirmar -->
-      <div class="mt-10 flex justify-center">
+      <!-- Botones: paginación + confirmar -->
+      <div class="mt-6 flex justify-center items-center gap-4 flex-wrap">
+        <button
+          *ngIf="hayAnterior"
+          (click)="verAnterior()"
+          class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded shadow"
+        >
+          Ver menos
+        </button>
+
+        <button
+          *ngIf="hayMas"
+          (click)="verMas()"
+          class="bg-blue-700 hover:bg-blue-800 text-white px-4 py-2 rounded shadow"
+        >
+          Ver más
+        </button>
+
         <button
           (click)="confirmarAsignacion()"
-          class="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-3 px-10 rounded-full shadow-lg transition duration-300"
+          class="bg-blue-800 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-full shadow-lg transition"
         >
           Confirmar Selección
         </button>

@@ -33,6 +33,11 @@ export class RegistroEnfermeroComponent {
     this.doctorService.registrarDoctor(this.enfermero).subscribe({
       next: (res: any) => {
         console.log('✔️ Registro exitoso:', res);
+
+        // Guardar nombre completo en localStorage
+        const nombreCompleto = `${this.enfermero.nombre} ${this.enfermero.apellido_p} ${this.enfermero.apellido_m}`;
+        localStorage.setItem('nombre', nombreCompleto);
+
         alert('✅ ¡Enfermero registrado correctamente!');
         this.resetFormulario();
         this.router.navigate(['/welcomeenfermero']); // Redirección automática

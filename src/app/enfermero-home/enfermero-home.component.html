@@ -1,0 +1,64 @@
+<div class="flex bg-gray-100 min-h-screen font-[Junge]">
+  <!-- Sidebar del enfermero -->
+  <app-sidebarenfermero></app-sidebarenfermero>
+
+  <!-- Contenido principal -->
+   <div class="flex-1 p-6">
+    <!-- Encabezado -->
+    <div class="flex justify-between items-center mb-8">
+      <!-- Paciente -->
+      <div class="flex items-center gap-4">
+        <div class="bg-[#A6C2F0] rounded-full w-12 h-12 flex items-center justify-center text-[#2F65BB] font-bold text-2xl">
+          👤
+        </div>
+        <div>
+          <p class="text-lg font-medium text-gray-700">Paciente</p>
+          <p class="text-xl font-bold text-gray-900">
+            {{ nombrePaciente !== 'Paciente' ? nombrePaciente : 'Sin paciente asignado' }}
+          </p>
+        </div>
+      </div>
+
+      <!-- Enfermero -->
+      <div class="text-right">
+        <p class="text-sm text-gray-500">👨‍⚕️ Enfermero</p>
+        <p class="text-base sm:text-lg font-semibold text-blue-700">{{ nombreEnfermero }}</p>
+      </div>
+    </div>
+
+    <!-- Gráficas -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <!-- Presión arterial -->
+      <div class="bg-white p-4 rounded-lg shadow">
+        <h3 class="text-lg font-semibold text-blue-700 mb-2">Presión Arterial</h3>
+        <div class="h-60">
+          <canvas id="graficaPresion"></canvas>
+        </div>
+      </div>
+
+      <!-- Frecuencia cardíaca -->
+      <div class="bg-white p-4 rounded-lg shadow">
+        <h3 class="text-lg font-semibold text-blue-700 mb-2">Frecuencia Cardíaca</h3>
+        <div class="h-60">
+          <canvas id="graficaFrecuencia"></canvas>
+        </div>
+      </div>
+
+      <!-- Actividad física (1) -->
+      <div class="bg-white p-4 rounded-lg shadow">
+        <h3 class="text-lg font-semibold text-blue-700 mb-2">Actividad Física - Día</h3>
+        <div class="h-60">
+          <canvas id="graficaActividad1"></canvas>
+        </div>
+      </div>
+
+      <!-- Actividad física (2) -->
+      <div class="bg-white p-4 rounded-lg shadow">
+        <h3 class="text-lg font-semibold text-blue-700 mb-2">Actividad Física - Semana</h3>
+        <div class="h-60">
+          <canvas id="graficaActividad2"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

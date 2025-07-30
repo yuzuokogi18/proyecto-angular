@@ -1,88 +1,117 @@
-<div class="flex min-h-screen">
-  <!-- Sidebar lateral -->
-  <app-sidebardoctor class="w-64 border-r border-gray-200"></app-sidebardoctor>
- <main class="flex-1 bg-white p-10">
-    <!-- Encabezado superior con paciente y doctor -->
-    <div class="flex justify-between items-center mb-8">
-      <!-- Paciente -->
-      <div class="flex items-center gap-4">
-        <div class="bg-[#A6C2F0] rounded-full w-12 h-12 flex items-center justify-center text-[#2F65BB] font-bold">
-          👤
-        </div>
-        <div>
-          <p class="text-lg font-medium">Paciente</p>
-          <p class="text-xl font-bold">{{ patient }}</p>
-        </div>
-      </div>
+<div class="flex flex-col lg:flex-row min-h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <div class="w-full lg:w-64">
+    <app-sidebardoctor></app-sidebardoctor>
+  </div>
 
-      <!-- Doctor -->
-      <div class="text-right">
-        <p class="text-sm text-gray-500">👩‍⚕️ Doctor</p>
-        <p class="font-medium">{{ doctor }}</p>
+  <!-- Contenido -->
+  <div class="flex-1 p-4 sm:p-6 md:p-8">
+    <!-- Encabezado -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+      <div class="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
+        <!-- Paciente -->
+        <div class="flex items-center gap-4 order-2 sm:order-1 justify-end sm:justify-start">
+          <div class="bg-[#A6C2F0] rounded-full w-12 h-12 flex items-center justify-center text-[#2F65BB] font-bold">👤</div>
+          <div class="text-right sm:text-left">
+            <p class="text-base sm:text-lg font-medium">Paciente</p>
+            <p class="text-lg sm:text-xl font-bold">{{ patient }}</p>
+          </div>
+        </div>
+
+        <!-- Doctor -->
+        <div class="text-right sm:text-left order-1 sm:order-2">
+          <p class="text-sm text-gray-500">👩‍⚕️ Doctor</p>
+          <p class="font-medium">{{ doctor }}</p>
+        </div>
       </div>
     </div>
-  <!-- Contenido -->
-  <div class="flex-1 p-6">
-    <!-- Buscar paciente -->
-<!-- Contenedor de búsqueda y botón -->
-<div class="mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-  <!-- Input de búsqueda -->
-  <input
-    type="text"
-    [(ngModel)]="busqueda"
-    placeholder="Buscar paciente"
-    class="w-full md:w-1/2 px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
-  />
 
-  <!-- Botón para añadir paciente -->
-  <button
-    (click)="irAgregarPaciente()"
-    class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition"
-  >
-    <img src="assets/agregarpaciente.png" alt="Añadir" class="w-5 h-5" />
-    Añadir Paciente
-  </button>
-</div>
+    <h2 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-[#2F65BB]">Lista de Pacientes</h2>
 
+    <!-- Buscador y botón -->
+    <div class="mb-6 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <input
+        type="text"
+        [(ngModel)]="busqueda"
+        placeholder="Buscar paciente"
+        class="w-full md:w-1/2 px-4 py-2 border rounded focus:outline-none focus:ring focus:border-blue-300"
+      />
+      <button
+        (click)="irAgregarPaciente()"
+        class="flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition w-full md:w-auto justify-center"
+      >
+        <img src="assets/agregarpaciente.png" alt="Añadir" class="w-5 h-5" />
+        Añadir Paciente
+      </button>
+    </div>
 
-
-    <!-- Tabla de pacientes -->
-    <div class="overflow-x-auto">
-      <table class="min-w-full table-auto border border-gray-300 rounded-md">
-        <thead class="bg-gray-100 text-left">
+    <!-- Tabla -->
+    <div class="overflow-x-auto rounded-lg shadow border border-gray-200">
+      <table class="min-w-full bg-white text-sm text-left">
+        <thead class="bg-[#2F65BB] text-white">
           <tr>
-            <th class="px-4 py-2">Nombre</th>
-            <th class="px-4 py-2">Edad</th>
-            <th class="px-4 py-2">Sexo</th>
-            <th class="px-4 py-2">Tipo de Sangre</th>
-            <th class="px-4 py-2">Talla</th>
-            <th class="px-4 py-2">Peso</th>
-            <th class="px-4 py-2">Enfermero Asignado</th>
-            <th class="px-4 py-2">Estado</th>
+            <th class="px-4 sm:px-6 py-3">Nombre</th>
+            <th class="px-4 sm:px-6 py-3">Edad</th>
+            <th class="px-4 sm:px-6 py-3">Sexo</th>
+            <th class="px-4 sm:px-6 py-3">Tipo de Sangre</th>
+            <th class="px-4 sm:px-6 py-3">Talla</th>
+            <th class="px-4 sm:px-6 py-3">Peso</th>
+            <th class="px-4 sm:px-6 py-3">Enfermero Asignado</th>
+            <th class="px-4 sm:px-6 py-3">Estado</th>
           </tr>
         </thead>
         <tbody>
           <tr
             *ngFor="let paciente of pacientesFiltrados()"
-            [ngClass]="{
-              'bg-blue-50 font-semibold': paciente.actual,
-              'hover:bg-gray-50': !paciente.actual
-            }"
-            class="border-t"
+            class="border-b hover:bg-gray-50"
+            [ngClass]="{ 'bg-blue-50 font-semibold': paciente.actual }"
           >
-            <td class="px-4 py-2">{{ paciente.nombre }}</td>
-            <td class="px-4 py-2">{{ paciente.edad }} años</td>
-            <td class="px-4 py-2">{{ paciente.sexo }}</td>
-            <td class="px-4 py-2">{{ paciente.sangre }}</td>
-            <td class="px-4 py-2">{{ paciente.talla }} cm</td>
-            <td class="px-4 py-2">{{ paciente.peso }} kg</td>
-            <td class="px-4 py-2">{{ paciente.enfermero }}</td>
-            <td class="px-4 py-2">
-              <span *ngIf="paciente.actual" class="bg-blue-500 text-white px-2 py-1 rounded text-sm">Actual</span>
+            <td class="px-4 sm:px-6 py-4 text-gray-800">{{ paciente.nombre }}</td>
+            <td class="px-4 sm:px-6 py-4">{{ paciente.edad }} años</td>
+            <td class="px-4 sm:px-6 py-4">{{ paciente.sexo }}</td>
+            <td class="px-4 sm:px-6 py-4">{{ paciente.sangre }}</td>
+            <td class="px-4 sm:px-6 py-4">{{ paciente.talla }} cm</td>
+            <td class="px-4 sm:px-6 py-4">{{ paciente.peso }} kg</td>
+            <td class="px-4 sm:px-6 py-4">{{ paciente.enfermero }}</td>
+            <td class="px-4 sm:px-6 py-4">
+              <div class="flex flex-col gap-2">
+                <span
+                  *ngIf="paciente.actual"
+                  class="inline-flex items-center gap-2 bg-green-100 text-green-800 px-3 py-1 rounded-full border border-green-300 text-xs font-medium"
+                >
+                  ✅ Actual
+                </span>
+                <button
+                  *ngIf="!paciente.actual"
+                  (click)="cambiarPacienteActual(paciente)"
+                  class="inline-flex items-center gap-2 text-blue-600 hover:text-blue-800 text-xs font-medium transition"
+                >
+                  <svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M12.293 2.293a1 1 0 011.414 0L17 5.586V8h-2.414l-3.293-3.293a1 1 0 010-1.414zM11 9l5 5H9v-2h2V9zM6 10v6h6v2H6a2 2 0 01-2-2v-6h2z" />
+                  </svg>
+                  Cambiar a este paciente
+                </button>
+              </div>
             </td>
           </tr>
         </tbody>
       </table>
+
+      <!-- Paginación -->
+      <div class="flex justify-center items-center gap-4 py-4 bg-white border-t border-gray-200">
+        <button
+          class="bg-[#2F65BB] text-white px-4 py-2 rounded disabled:opacity-50"
+          (click)="verMenos()"
+          [disabled]="!hayAnterior">
+          Anterior
+        </button>
+        <button
+          class="bg-[#2F65BB] text-white px-4 py-2 rounded disabled:opacity-50"
+          (click)="verMas()"
+          [disabled]="!hayMas">
+          Ver más
+        </button>
+      </div>
     </div>
   </div>
-
+</div>

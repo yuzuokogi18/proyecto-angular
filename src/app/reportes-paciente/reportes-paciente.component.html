@@ -1,0 +1,85 @@
+<div class="flex min-h-screen bg-white">
+
+  <!-- Sidebar -->
+  <app-sidebardoctor></app-sidebardoctor>
+
+  <!-- Contenido -->
+  <div class="flex-1 p-10">
+    
+    <!-- Encabezado -->
+    <div class="flex justify-between items-center mb-10">
+      <div class="flex items-center gap-4">
+        <div class="bg-[#A6C2F0] rounded-full w-12 h-12 flex items-center justify-center text-[#2F65BB] font-bold text-lg">
+          <!-- Ícono Paciente (SVG) -->
+          <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 12c2.7 0 5-2.3 5-5s-2.3-5-5-5-5 2.3-5 5 2.3 5 5 5zm0 2c-3.3 0-10 1.7-10 5v3h20v-3c0-3.3-6.7-5-10-5z"/>
+          </svg>
+        </div>
+        <div>
+          <p class="text-lg font-medium text-gray-600">Paciente</p>
+          <p class="text-xl font-bold text-gray-900">{{ patient }}</p>
+        </div>
+      </div>
+      <div class="text-right flex flex-col items-end">
+        <div class="flex items-center gap-2">
+          <!-- Ícono Doctor (SVG) -->
+          <svg class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M20 21v-2c0-2.8-3.1-5-7-5s-7 2.2-7 5v2h14zm-7-7c2.8 0 5-2.2 5-5s-2.2-5-5-5-5 2.2-5 5 2.2 5 5 5z"/>
+          </svg>
+          <p class="text-sm text-gray-500">Doctor</p>
+        </div>
+        <p class="font-medium text-gray-900">{{ doctor }}</p>
+      </div>
+    </div>
+
+    <!-- Título -->
+    <h2 class="text-3xl font-bold text-center text-gray-900 mb-10">Reportes del Paciente</h2>
+
+    <!-- Reportes -->
+    <div *ngFor="let reporte of reportes" class="border border-blue-500 p-5 mb-6 rounded-md flex items-center justify-between">
+      <div class="flex items-center gap-4">
+        <!-- Ícono Reporte (SVG) -->
+        <svg class="w-10 h-10 text-blue-700" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M14 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8l-6-6zM6 20V4h7v5h5v11H6z"/>
+        </svg>
+        <div>
+          <p class="text-xl font-semibold">Reporte Turno {{ reporte.turno | titlecase }}</p>
+          <p class="text-sm mt-1" [ngClass]="{
+            'text-green-600': reporte.completado,
+            'text-red-700': !reporte.completado
+          }">
+            {{ reporte.completado ? 'Turno Completado' : 'Turno aun no Completado' }}
+          </p>
+        </div>
+      </div>
+
+      <div class="flex gap-4 items-center">
+        <!-- WORD Button -->
+        <div
+          (click)="descargar('word', reporte.turno)"
+          class="cursor-pointer flex flex-col items-center hover:scale-110 transition"
+          [class.opacity-30]="!reporte.completado"
+          [class.pointer-events-none]="!reporte.completado"
+        >
+          <svg class="w-8 h-8 text-blue-600" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M4 4h16v16H4V4zm2 2v12h12V6H6zm2 2h2l1 4 1-4h2l-2 6h-2l-2-6z"/>
+          </svg>
+          <span class="text-xs mt-1">WORD</span>
+        </div>
+
+        <!-- PDF Button -->
+        <div
+          (click)="descargar('pdf', reporte.turno)"
+          class="cursor-pointer flex flex-col items-center hover:scale-110 transition"
+          [class.opacity-30]="!reporte.completado"
+          [class.pointer-events-none]="!reporte.completado"
+        >
+          <svg class="w-8 h-8 text-red-600" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M4 2h14l4 4v16H4V2zm14 4V4l2 2h-2zM6 6h9v2H6V6zm0 4h12v2H6v-2zm0 4h12v2H6v-2z"/>
+          </svg>
+          <span class="text-xs mt-1">PDF</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

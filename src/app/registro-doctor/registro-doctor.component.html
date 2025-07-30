@@ -52,12 +52,12 @@
       <!-- Cédula Profesional -->
       <div>
         <label class="block font-semibold mb-1">Cédula Profesional:</label>
-        <input [(ngModel)]="doctor.cedula" name="cedula" type="text" required pattern="^\d{7,8}$"
+        <input [(ngModel)]="doctor.cedula" name="cedula" type="text" required pattern="^\d{8}$"
           class="w-full border px-4 py-3 rounded-md"
           [ngClass]="{'border-red-500': cedula.invalid && (cedula.touched || form.submitted)}"
           #cedula="ngModel" />
         <p *ngIf="cedula.errors?.['required'] && (cedula.touched || form.submitted)" class="text-red-500 text-sm mt-1">Campo obligatorio.</p>
-        <p *ngIf="cedula.errors?.['pattern'] && (cedula.touched || form.submitted)" class="text-red-500 text-sm mt-1">Debe tener 7 u 8 dígitos numéricos.</p>
+        <p *ngIf="cedula.errors?.['pattern'] && (cedula.touched || form.submitted)" class="text-red-500 text-sm mt-1">Debe tener 8 dígitos numéricos.</p>
       </div>
 
       <!-- Correo -->
@@ -80,7 +80,7 @@
           [ngClass]="{'border-red-500': contrasena.invalid && (contrasena.touched || form.submitted)}"
           #contrasena="ngModel" />
         <small class="text-gray-600 text-xs block mt-1">
-          Debe tener al menos 8 caracteres, una mayúscula y un número. Ej: <b>Doctor123</b>
+          Debe tener al menos 8 caracteres, una mayúscula y un número. Ej: <b>Alexanda43</b>
         </small>
         <p *ngIf="contrasena.errors?.['required'] && (contrasena.touched || form.submitted)" class="text-red-500 text-sm mt-1">Campo obligatorio.</p>
         <p *ngIf="contrasena.errors?.['pattern'] && (contrasena.touched || form.submitted)" class="text-red-500 text-sm mt-1">Formato inválido.</p>

@@ -1,0 +1,94 @@
+<div class="flex">
+  <!-- Botón hamburguesa solo visible en móviles/tablets -->
+  <button
+    (click)="menuAbierto = !menuAbierto"
+    class="md:hidden fixed top-4 left-4 z-50 bg-[#2F65BB] text-white p-2 rounded focus:outline-none shadow-lg"
+  >
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+  </button>
+
+  <!-- Sidebar permanente en escritorio -->
+  <div class="h-screen w-64 bg-[#2F65BB] flex flex-col text-white py-6 px-5 hidden md:flex">
+    <!-- Logo -->
+    <div class="flex justify-center mb-6">
+      <a [routerLink]="['/enfermerohome']">
+        <img src="assets/logosit.png" alt="Pulse Sense" class="w-32 cursor-pointer" />
+      </a>
+    </div>
+
+    <!-- Navegación -->
+    <nav class="flex flex-col gap-12">
+      <a routerLink="/verpacientenfermero" class="flex items-center gap-4 hover:text-blue-200">
+        <img src="assets/pacientes.png" alt="Pacientes" class="w-14 h-14" />
+        <span class="text-lg font-medium">Pacientes</span>
+      </a>
+
+      <a routerLink="/doctoresasignados" class="flex items-center gap-4 hover:text-blue-200">
+        <img src="assets/doctores.png" alt="Doctores" class="w-14 h-14" />
+        <span class="text-lg font-medium">Doctores</span>
+      </a>
+
+      <a routerLink="/reportes" class="flex items-center gap-4 hover:text-blue-200">
+        <img src="assets/reporte.png" alt="Reportes" class="w-14 h-14" />
+        <span class="text-lg font-medium">Reportes</span>
+      </a>
+
+      <a routerLink="/historial" class="flex items-center gap-4 hover:text-blue-200">
+        <img src="assets/historial.png" alt="Historial" class="w-14 h-14" />
+        <span class="text-lg font-medium">Historial</span>
+      </a>
+    </nav>
+
+    <!-- Cerrar sesión -->
+    <div class="mt-auto pt-10">
+      <div (click)="cerrarSesion()" class="flex items-center gap-4 cursor-pointer hover:text-blue-200">
+        <img src="assets/cerrarsesion.png" alt="Cerrar Sesión" class="w-11 h-11" />
+        <span class="text-lg font-medium">Cerrar Sesión</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sidebar móvil (desplegable) -->
+  <div
+    class="fixed inset-y-0 left-0 z-40 w-64 bg-[#2F65BB] text-white py-6 px-5 transform transition-transform duration-300 ease-in-out md:hidden"
+    [ngClass]="{ 'translate-x-0': menuAbierto, '-translate-x-full': !menuAbierto }"
+  >
+    <!-- Logo + cerrar -->
+    <div class="flex justify-between items-center mb-6">
+      <a [routerLink]="['/enfermerohome']">
+        <img src="assets/logosit.png" alt="Pulse Sense" class="w-28 cursor-pointer" />
+      </a>
+      <button (click)="menuAbierto = false" class="text-white text-2xl">&times;</button>
+    </div>
+
+    <!-- Navegación móvil -->
+    <nav class="flex flex-col gap-10 mt-8">
+      <a (click)="menuAbierto = false" routerLink="/verpacientenfermero" class="flex items-center gap-4">
+        <img src="assets/pacientes.png" class="w-10" />
+        <span class="text-base">Pacientes</span>
+      </a>
+      <a (click)="menuAbierto = false" routerLink="/doctoresasignados" class="flex items-center gap-4">
+        <img src="assets/doctores.png" class="w-10" />
+        <span class="text-base">Doctores</span>
+      </a>
+      <a (click)="menuAbierto = false" routerLink="/reportes" class="flex items-center gap-4">
+        <img src="assets/reporte.png" class="w-10" />
+        <span class="text-base">Reportes</span>
+      </a>
+      <a (click)="menuAbierto = false" routerLink="/historial" class="flex items-center gap-4">
+        <img src="assets/historial.png" class="w-10" />
+        <span class="text-base">Historial</span>
+      </a>
+    </nav>
+
+    <!-- Cerrar sesión -->
+    <div class="mt-auto pt-10">
+      <div (click)="cerrarSesion()" class="flex items-center gap-4 cursor-pointer">
+        <img src="assets/cerrarsesion.png" class="w-8" />
+        <span class="text-base">Cerrar Sesión</span>
+      </div>
+    </div>
+  </div>
+</div>

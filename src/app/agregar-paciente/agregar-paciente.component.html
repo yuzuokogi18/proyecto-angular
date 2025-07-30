@@ -1,96 +1,118 @@
-<div class="flex min-h-screen">
-  <!-- Sidebar -->
+<div class="flex min-h-screen bg-white">
   <app-sidebardoctor></app-sidebardoctor>
 
-  <!-- Main Content -->
   <main class="flex-1 p-10">
-    <h2 class="text-2xl font-semibold text-center mb-10">Agregar Paciente</h2>
+    <h2 class="text-3xl font-bold text-center text-[#03045E] mb-10">Agregar Paciente</h2>
 
-    <form class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-5xl mx-auto"
-          (ngSubmit)="agregarPaciente()" #form="ngForm" novalidate>
+<form (ngSubmit)="agregarPaciente(form)" #form="ngForm" class="grid grid-cols-1 lg:grid-cols-2 gap-x-10 gap-y-6 max-w-5xl mx-auto">
 
       <!-- Nombres -->
       <div>
-        <label class="block mb-1">Nombres:</label>
-        <input type="text" class="w-full border border-gray-300 p-2 rounded"
-               required [(ngModel)]="paciente.nombres" name="nombres" #nombres="ngModel"/>
-        <p *ngIf="nombres.invalid && nombres.touched" class="text-red-600 text-sm">Este campo es requerido</p>
+        <label class="block font-semibold mb-1">Nombres:</label>
+        <input [(ngModel)]="paciente.nombres" name="nombres" type="text" required pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+          class="w-full border px-4 py-3 rounded-md"
+          [ngClass]="{'border-red-500': nombres.invalid && (nombres.touched || form.submitted)}"
+          #nombres="ngModel" />
+        <p *ngIf="nombres.errors?.['required'] && (nombres.touched || form.submitted)" class="text-red-500 text-sm mt-1">Este campo es obligatorio.</p>
+        <p *ngIf="nombres.errors?.['pattern'] && (nombres.touched || form.submitted)" class="text-red-500 text-sm mt-1">Solo letras y espacios.</p>
       </div>
 
       <!-- Apellido Paterno -->
       <div>
-        <label class="block mb-1">Apellido Paterno:</label>
-        <input type="text" class="w-full border border-gray-300 p-2 rounded"
-               required [(ngModel)]="paciente.apellido_p" name="apellido_p" #apellido_p="ngModel"/>
-        <p *ngIf="apellido_p.invalid && apellido_p.touched" class="text-red-600 text-sm">Este campo es requerido</p>
+        <label class="block font-semibold mb-1">Apellido Paterno:</label>
+        <input [(ngModel)]="paciente.apellido_p" name="apellido_p" type="text" required pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+          class="w-full border px-4 py-3 rounded-md"
+          [ngClass]="{'border-red-500': apellido_p.invalid && (apellido_p.touched || form.submitted)}"
+          #apellido_p="ngModel" />
+        <p *ngIf="apellido_p.errors?.['required'] && (apellido_p.touched || form.submitted)" class="text-red-500 text-sm mt-1">Este campo es obligatorio.</p>
+        <p *ngIf="apellido_p.errors?.['pattern'] && (apellido_p.touched || form.submitted)" class="text-red-500 text-sm mt-1">Solo letras y espacios.</p>
       </div>
 
       <!-- Apellido Materno -->
       <div>
-        <label class="block mb-1">Apellido Materno:</label>
-        <input type="text" class="w-full border border-gray-300 p-2 rounded"
-               required [(ngModel)]="paciente.apellido_m" name="apellido_m" #apellido_m="ngModel"/>
-        <p *ngIf="apellido_m.invalid && apellido_m.touched" class="text-red-600 text-sm">Este campo es requerido</p>
+        <label class="block font-semibold mb-1">Apellido Materno:</label>
+        <input [(ngModel)]="paciente.apellido_m" name="apellido_m" type="text" required pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+          class="w-full border px-4 py-3 rounded-md"
+          [ngClass]="{'border-red-500': apellido_m.invalid && (apellido_m.touched || form.submitted)}"
+          #apellido_m="ngModel" />
+        <p *ngIf="apellido_m.errors?.['required'] && (apellido_m.touched || form.submitted)" class="text-red-500 text-sm mt-1">Este campo es obligatorio.</p>
+        <p *ngIf="apellido_m.errors?.['pattern'] && (apellido_m.touched || form.submitted)" class="text-red-500 text-sm mt-1">Solo letras y espacios.</p>
       </div>
 
-      <!-- Fecha de Nacimiento -->
+      <!-- Fecha de nacimiento -->
       <div>
-        <label class="block mb-1">Fecha de Nacimiento:</label>
-        <input type="date" class="w-full border border-gray-300 p-2 rounded"
-               required [(ngModel)]="paciente.nacimiento" name="nacimiento" #nacimiento="ngModel"/>
-        <p *ngIf="nacimiento.invalid && nacimiento.touched" class="text-red-600 text-sm">Este campo es requerido</p>
+        <label class="block font-semibold mb-1">Fecha de Nacimiento:</label>
+        <input [(ngModel)]="paciente.nacimiento" name="nacimiento" type="date" required max="1999-12-31"
+          class="w-full border px-4 py-3 rounded-md"
+          [ngClass]="{'border-red-500': nacimiento.invalid && (nacimiento.touched || form.submitted)}"
+          #nacimiento="ngModel" />
+        <p *ngIf="nacimiento.errors?.['required'] && (nacimiento.touched || form.submitted)" class="text-red-500 text-sm mt-1">Este campo es obligatorio.</p>
+        <p *ngIf="nacimiento.value && nacimiento.value > '1999-12-31'" class="text-red-500 text-sm mt-1">Solo se permite hasta el año 1999.</p>
       </div>
 
       <!-- Peso -->
       <div>
-        <label class="block mb-1">Peso (kg):</label>
-        <input type="number" step="0.1" class="w-full border border-gray-300 p-2 rounded"
-               required [(ngModel)]="paciente.peso" name="peso" #peso="ngModel"/>
-        <p *ngIf="peso.invalid && peso.touched" class="text-red-600 text-sm">Peso requerido</p>
+        <label class="block font-semibold mb-1">Peso (kg):</label>
+        <input [(ngModel)]="paciente.peso" name="peso" type="number" required
+          class="w-full border px-4 py-3 rounded-md"
+          [ngClass]="{'border-red-500': peso.invalid && (peso.touched || form.submitted)}"
+          #peso="ngModel" />
+        <p *ngIf="peso.errors?.['required'] && (peso.touched || form.submitted)" class="text-red-500 text-sm mt-1">Campo obligatorio.</p>
       </div>
 
       <!-- Estatura -->
       <div>
-        <label class="block mb-1">Estatura (m):</label>
-        <input type="number" step="0.01" class="w-full border border-gray-300 p-2 rounded"
-               required [(ngModel)]="paciente.estatura" name="estatura" #estatura="ngModel"/>
-        <p *ngIf="estatura.invalid && estatura.touched" class="text-red-600 text-sm">Estatura requerida</p>
+        <label class="block font-semibold mb-1">Estatura (m):</label>
+        <input [(ngModel)]="paciente.estatura" name="estatura" type="number" required step="0.01"
+          class="w-full border px-4 py-3 rounded-md"
+          [ngClass]="{'border-red-500': estatura.invalid && (estatura.touched || form.submitted)}"
+          #estatura="ngModel" />
+        <p *ngIf="estatura.errors?.['required'] && (estatura.touched || form.submitted)" class="text-red-500 text-sm mt-1">Campo obligatorio.</p>
       </div>
 
       <!-- Sexo -->
       <div>
-        <label class="block mb-1">Sexo:</label>
-        <select class="w-full border border-gray-300 p-2 rounded"
-                required [(ngModel)]="paciente.sexo" name="sexo" #sexo="ngModel">
-          <option value="" disabled>Seleccione el sexo</option>
+        <label class="block font-semibold mb-1">Sexo:</label>
+        <select [(ngModel)]="paciente.sexo" name="sexo" required
+          class="w-full border px-4 py-3 rounded-md"
+          [ngClass]="{'border-red-500': sexo.invalid && (sexo.touched || form.submitted)}"
+          #sexo="ngModel">
+          <option value="" disabled selected>Seleccione el sexo</option>
           <option value="M">Masculino</option>
           <option value="F">Femenino</option>
         </select>
-        <p *ngIf="sexo.invalid && sexo.touched" class="text-red-600 text-sm">Debe seleccionar un sexo</p>
+        <p *ngIf="sexo.errors?.['required'] && (sexo.touched || form.submitted)" class="text-red-500 text-sm mt-1">Campo obligatorio.</p>
       </div>
 
       <!-- Tipo de Sangre -->
       <div>
-        <label class="block mb-1">Tipo de Sangre:</label>
-        <select class="w-full border border-gray-300 p-2 rounded"
-                required [(ngModel)]="paciente.id_tipo_sangre" name="id_tipo_sangre" #id_tipo_sangre="ngModel">
+        <label class="block font-semibold mb-1">Tipo de Sangre:</label>
+        <select [(ngModel)]="paciente.id_tipo_sangre" name="id_tipo_sangre" required
+          class="w-full border px-4 py-3 rounded-md"
+          [ngClass]="{'border-red-500': id_tipo_sangre.invalid && (id_tipo_sangre.touched || form.submitted)}"
+          #id_tipo_sangre="ngModel">
           <option value="" disabled selected>Seleccione tipo de sangre</option>
           <option *ngFor="let tipo of tiposSangre" [value]="tipo.id">{{ tipo.label }}</option>
         </select>
-        <p *ngIf="id_tipo_sangre.invalid && id_tipo_sangre.touched" class="text-red-600 text-sm">Debe seleccionar un tipo</p>
+        <p *ngIf="id_tipo_sangre.errors?.['required'] && (id_tipo_sangre.touched || form.submitted)" class="text-red-500 text-sm mt-1">Campo obligatorio.</p>
       </div>
 
-      <!-- Número de Emergencia -->
-      <div>
-        <label class="block mb-1">Número de Emergencia:</label>
-        <input type="tel" class="w-full border border-gray-300 p-2 rounded"
-               required [(ngModel)]="paciente.numero_emergencia" name="numero_emergencia" #numero_emergencia="ngModel"/>
-        <p *ngIf="numero_emergencia.invalid && numero_emergencia.touched" class="text-red-600 text-sm">Este campo es requerido</p>
+      <!-- Número de emergencia -->
+      <div class="lg:col-span-2">
+        <label class="block font-semibold mb-1">Número de Emergencia:</label>
+        <input [(ngModel)]="paciente.numero_emergencia" name="numero_emergencia" type="tel"
+          pattern="^[0-9]{10}$" required
+          class="w-full border px-4 py-3 rounded-md"
+          [ngClass]="{'border-red-500': numero_emergencia.invalid && (numero_emergencia.touched || form.submitted)}"
+          #numero_emergencia="ngModel" />
+        <p *ngIf="numero_emergencia.errors?.['required'] && (numero_emergencia.touched || form.submitted)" class="text-red-500 text-sm mt-1">Campo obligatorio.</p>
+        <p *ngIf="numero_emergencia.errors?.['pattern'] && (numero_emergencia.touched || form.submitted)" class="text-red-500 text-sm mt-1">Debe tener exactamente 10 dígitos numéricos.</p>
       </div>
 
       <!-- Botón -->
-      <div class="md:col-span-2 flex justify-center mt-6">
-        <button type="submit" class="bg-blue-800 text-white px-8 py-2 rounded hover:bg-blue-700">
+      <div class="lg:col-span-2 flex justify-center mt-6">
+        <button type="submit"
+          class="bg-[#1D4ED8] hover:bg-[#153dc4] text-white font-semibold py-3 px-10 rounded-md transition duration-200">
           Agregar Paciente
         </button>
       </div>

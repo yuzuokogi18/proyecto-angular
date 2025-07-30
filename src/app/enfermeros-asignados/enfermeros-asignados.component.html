@@ -1,0 +1,83 @@
+<div class="flex flex-col lg:flex-row min-h-screen bg-gray-50">
+  <!-- Sidebar -->
+  <div class="w-full lg:w-64">
+    <app-sidebardoctor></app-sidebardoctor>
+  </div>
+
+  <!-- Contenido -->
+  <div class="flex-1 p-4 sm:p-6 md:p-8">
+    <!-- Encabezado superior -->
+    <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+      <div class="w-full flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <!-- Paciente -->
+        <div class="flex items-center gap-4 order-2 sm:order-1 justify-end sm:justify-start">
+          <div class="bg-[#A6C2F0] rounded-full w-12 h-12 flex items-center justify-center text-[#2F65BB] font-bold">
+            👤
+          </div>
+          <div class="text-right sm:text-left">
+            <p class="text-base sm:text-lg font-medium">Paciente</p>
+            <p class="text-lg sm:text-xl font-bold">{{ patient }}</p>
+          </div>
+        </div>
+
+        <!-- Doctor -->
+        <div class="text-right sm:text-right order-1 sm:order-2 mb-2 sm:mb-0">
+          <p class="text-sm text-gray-500">👩‍⚕️ Doctor</p>
+          <p class="font-medium">{{ doctor }}</p>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="text-xl sm:text-2xl font-semibold mb-4 sm:mb-6 text-[#2F65BB]">Enfermeros Asignados</h2>
+
+    <!-- Cargando -->
+    <div *ngIf="loading" class="text-gray-600">Cargando enfermeros...</div>
+    <div *ngIf="error" class="text-red-500">{{ error }}</div>
+
+    <!-- Tabla de enfermeros -->
+    <div *ngIf="enfermeros.length > 0" class="overflow-x-auto rounded-lg shadow border border-gray-200">
+      <table class="min-w-full bg-white text-sm text-left">
+        <thead class="bg-[#2F65BB] text-white">
+          <tr>
+            <th class="px-4 sm:px-6 py-3">Nombre del Enfermero</th>
+            <th class="px-4 sm:px-6 py-3">Correo</th>
+            <th class="px-4 sm:px-6 py-3">Paciente Asignado</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of enfermerosPaginados" class="border-b hover:bg-gray-50">
+            <td class="px-4 sm:px-6 py-4 font-medium text-[#1a1a1a]">
+              Enf. {{ item.doctor_nombre }} {{ item.doctor_apellido_p }} {{ item.doctor_apellido_m }}
+            </td>
+            <td class="px-4 sm:px-6 py-4 text-black-700">{{ item.doctor_correo }}</td>
+            <td class="px-4 sm:px-6 py-4 text-black-700">
+              {{ item.paciente_nombre }} {{ item.paciente_apellido_p }} {{ item.paciente_apellido_m }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Paginación -->
+      <div class="flex justify-center items-center gap-4 py-4 bg-white border-t border-gray-200">
+        <button
+          class="bg-[#2F65BB] text-white px-4 py-2 rounded disabled:opacity-50"
+          (click)="verMenos()"
+          [disabled]="!hayAnterior">
+          Anterior
+        </button>
+
+        <button
+          class="bg-[#2F65BB] text-white px-4 py-2 rounded disabled:opacity-50"
+          (click)="verMas()"
+          [disabled]="!hayMas">
+          Ver más
+        </button>
+      </div>
+    </div>
+
+    <!-- Sin resultados -->
+    <div *ngIf="!loading && enfermeros.length === 0 && !error" class="text-gray-500 mt-6">
+      No se encontraron enfermeros asignados.
+    </div>
+  </div>
+</div>

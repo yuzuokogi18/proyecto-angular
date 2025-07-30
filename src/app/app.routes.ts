@@ -15,6 +15,14 @@ import { DoctorHomeComponent } from './doctor-home/doctor-home.component';
 import { SidebardoctorComponent } from './sidebardoctor/sidebardoctor.component';
 import { PatientsdoctorComponent } from './patientsdoctor/patientsdoctor.component';
 import { AsignarEnfermerosComponent } from './asignar-enfermeros/asignar-enfermeros.component';
+import { SidebarenfermeroComponent } from './sidebarenfermero/sidebarenfermero.component';
+import { EnfermeroHomeComponent } from './enfermero-home/enfermero-home.component';
+import { VerpacientenfermeroComponent } from './verpacientenfermero/verpacientenfermero.component';
+import { DoctoresasignadosComponent } from './doctoresasignados/doctoresasignados.component';
+import { EnfermerosAsignadosComponent } from './enfermeros-asignados/enfermeros-asignados.component';
+import { ReportesPacienteComponent } from './reportes-paciente/reportes-paciente.component';
+import { HistorialPacienteComponent } from './historial-paciente/historial-paciente.component';
+
 
 export const routes: Routes = [{ path: '', component:HomeComponent },
     { path: 'landing', component: LandingComponent },
@@ -32,6 +40,19 @@ export const routes: Routes = [{ path: '', component:HomeComponent },
    { path: 'doctorhome', component: DoctorHomeComponent },
    { path: 'sidebardoctor', component: SidebardoctorComponent },
     { path: 'patientsdoctor', component: PatientsdoctorComponent },
+   
+
+     { path: 'enfermerohome', component: EnfermeroHomeComponent },
+      { path: 'sidebarenfermero', component: SidebarenfermeroComponent },
+      { path: 'verpacientenfermero', component: VerpacientenfermeroComponent },
+
+
+         { path: 'doctoresasignados', component: DoctoresasignadosComponent},
+          { path: 'enfermerosasignados', component: EnfermerosAsignadosComponent},
+          { path: 'reportespaciente', component: ReportesPacienteComponent},
+         { path: 'historialpaciente', component: HistorialPacienteComponent },
+
+
    
 
 

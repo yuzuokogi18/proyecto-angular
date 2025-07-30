@@ -1,39 +1,103 @@
-<div class="h-screen w-60 bg-[#2F65BB] flex flex-col text-white py-6 px-5">
+<!-- Sidebar responsive -->
+<div class="flex">
+  <!-- Botón hamburguesa solo visible en móviles/tablets -->
+  <button
+    (click)="menuAbierto = !menuAbierto"
+    class="md:hidden fixed top-4 left-4 z-50 bg-[#2F65BB] text-white p-2 rounded focus:outline-none shadow-lg"
+  >
+    <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+  </button>
+
+  <!-- Sidebar permanente en escritorio, oculto en móviles/tablets -->
+  <div
+    class="h-screen w-60 bg-[#2F65BB] flex flex-col text-white py-6 px-5 hidden md:flex"
+  >
+    <!-- Logo -->
   <!-- Logo -->
-  <div class="flex flex-col items-center mb-6">
-    <img src="assets/logosit.png" alt="Pulse Sense" class="w-32" />
+<div class="flex flex-col items-center mb-6">
+  <a [routerLink]="['/doctorhome']">
+    <img src="assets/logosit.png" alt="Pulse Sense" class="w-32 cursor-pointer" />
+  </a>
+</div>
+
+
+    <!-- Navegación -->
+    <nav class="flex flex-col gap-12">
+      <a [routerLink]="['/patientsdoctor']" class="flex items-center gap-4 cursor-pointer">
+        <img src="assets/pacientes.png" alt="Pacientes" class="w-16" />
+        <span class="text-[16px]">Pacientes</span>
+      </a>
+
+      <a routerLink="/enfermerosasignados" class="flex items-center gap-4 hover:text-blue-200">
+        <img src="assets/enfermero.png" alt="Enfermeros Asignados" class="w-16" />
+        <span class="text-[16px] leading-5">Enfermeros<br />Asignados</span>
+      </a>
+
+     <a routerLink="/reportespaciente" class="flex items-center gap-4 hover:text-blue-200">
+        <img src="assets/reporte.png" alt="Enfermeros Asignados" class="w-16" />
+        <span class="text-[16px] leading-5">Reportes</span>
+      </a>
+
+    <a routerLink="/historialpaciente" class="flex items-center gap-4">
+  <img src="assets/historial.png" alt="Historial" class="w-16" />
+  <span class="text-[16px]">Historial</span>
+</a>
+
+
+    </nav>
+
+    <!-- Cerrar sesión -->
+    <div class="mt-auto pt-10">
+      <div (click)="cerrarSesion()" class="flex items-center gap-4 cursor-pointer">
+        <img src="assets/cerrarsesion.png" alt="Cerrar Sesión" class="w-10" />
+        <span class="text-[16px]">Cerrar Sesión</span>
+      </div>
+    </div>
   </div>
 
-  <!-- Menú -->
-<nav class="flex flex-col gap-12">
-  <a [routerLink]="['/patientsdoctor']" class="flex items-center gap-4 cursor-pointer">
-    <img src="assets/pacientes.png" alt="Pacientes" class="w-16" />
-    <span class="text-[16px]">Pacientes</span>
+  <!-- Sidebar móvil (desplegable) -->
+  <div
+    class="fixed inset-y-0 left-0 z-40 w-60 bg-[#2F65BB] text-white py-6 px-5 transform transition-transform duration-300 ease-in-out md:hidden"
+    [ngClass]="{ 'translate-x-0': menuAbierto, '-translate-x-full': !menuAbierto }"
+  >
+    <!-- Logo -->
+   <!-- Logo móvil con botón de cerrar -->
+<div class="flex justify-between items-center mb-6">
+  <a [routerLink]="['/doctorhome']">
+    <img src="assets/logosit.png" alt="Pulse Sense" class="w-28 cursor-pointer" />
   </a>
+  <button (click)="menuAbierto = false" class="text-white text-2xl">&times;</button>
+</div>
 
 
+    <!-- Navegación -->
+    <nav class="flex flex-col gap-10 mt-8">
+      <a (click)="menuAbierto = false" routerLink="/patientsdoctor" class="flex items-center gap-4">
+        <img src="assets/pacientes.png" class="w-10" />
+        <span class="text-base">Pacientes</span>
+      </a>
+      <a (click)="menuAbierto = false" routerLink="/enfermerosasignados" class="flex items-center gap-4">
+        <img src="assets/enfermero.png" class="w-10" />
+        <span class="text-base leading-4">Enfermeros<br>Asignados</span>
+      </a>
+      <a href="#" class="flex items-center gap-4">
+        <img src="assets/reporte.png" class="w-10" />
+        <span class="text-base">Reportes</span>
+      </a>
+      <a href="#" class="flex items-center gap-4">
+        <img src="assets/historial.png" class="w-10" />
+        <span class="text-base">Historial</span>
+      </a>
+    </nav>
 
-    <a href="#" class="flex items-center gap-4">
-      <img src="assets/enfermero.png" alt="Enfermeros Asignados" class="w-16" />
-      <span class="text-[16px] leading-5">Enfermeros<br />Asignados</span>
-    </a>
-
-    <a href="#" class="flex items-center gap-4">
-      <img src="assets/reporte.png" alt="Reportes" class="w-16" />
-      <span class="text-[16px]">Reportes</span>
-    </a>
-
-    <a href="#" class="flex items-center gap-4">
-      <img src="assets/historial.png" alt="Historial" class="w-16" />
-      <span class="text-[16px]">Historial</span>
-    </a>
-  </nav>
-
-  <!-- Cerrar sesión -->
-  <div class="mt-auto pt-10">
-    <a href="#" class="flex items-center gap-4">
-      <img src="assets/cerrarsesion.png" alt="Cerrar Sesión" class="w-10" />
-      <span class="text-[16px]">Cerrar Sesión</span>
-    </a>
+    <!-- Cerrar sesión -->
+    <div class="mt-auto pt-10">
+      <div (click)="cerrarSesion()" class="flex items-center gap-4 cursor-pointer">
+        <img src="assets/cerrarsesion.png" class="w-8" />
+        <span class="text-base">Cerrar Sesión</span>
+      </div>
+    </div>
   </div>
 </div>

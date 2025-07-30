@@ -5,7 +5,6 @@ import { SidebardoctorComponent } from "../sidebardoctor/sidebardoctor.component
 import { DoctorService } from '../services/doctor.service';
 import { Router } from '@angular/router';
 
-
 @Component({
   selector: 'app-patientsdoctor',
   standalone: true,
@@ -19,15 +18,15 @@ export class PatientsdoctorComponent implements OnInit {
   doctor = localStorage.getItem('nombreDoctor') || 'Dr. Ana Paula';
   patient = localStorage.getItem('nombrePaciente') || 'Luna Vazquez';
 
-  constructor(private doctorService: DoctorService,private router: Router) {}
-  
+  // Paginación
+  currentPage: number = 1;
+  itemsPerPage: number = 4;
+
+  constructor(private doctorService: DoctorService, private router: Router) {}
 
   ngOnInit(): void {
     const idDoctor = Number(localStorage.getItem('iduser'));
-    const token = localStorage.getItem('token');
-
-    console.log('🩺 ID del doctor actual (solo iduser):', idDoctor);
-    console.log('🔐 Token actual:', token);
+    const nombreActual = localStorage.getItem('nombrePaciente') || '';
 
     if (!idDoctor || isNaN(idDoctor)) {
       console.warn('❌ ID de doctor inválido');
@@ -37,11 +36,7 @@ export class PatientsdoctorComponent implements OnInit {
     this.doctorService.getPacientesPorDoctor(idDoctor).subscribe({
       next: (res: any) => {
         const datos = Array.isArray(res?.data) ? res.data : [];
-        console.log('📋 Pacientes recibidos del backend:', datos);
-
-        const nombreActual = localStorage.getItem('nombrePaciente');
-
-        this.pacientes = [];
+        const pacientesTemporales: any[] = [];
 
         datos.forEach((p: any) => {
           const pacienteTemp = {
@@ -56,18 +51,15 @@ export class PatientsdoctorComponent implements OnInit {
             actual: `${p.nombres} ${p.apellido_p} ${p.apellido_m}` === nombreActual
           };
 
-          // Llamada para obtener enfermeros asignados
           this.doctorService.getEnfermerosPorPaciente(p.id_paciente).subscribe({
             next: (response: any) => {
               const enfermeros = response?.data || [];
               const nombres = enfermeros.map((e: any) => `${e.nombres} ${e.apellido_p}`).join(', ');
               pacienteTemp.enfermero = nombres || '—';
             },
-            error: (err) => {
-              console.warn(`⚠️ No se pudo obtener enfermeros para paciente ID ${p.id_paciente}`, err);
-            },
             complete: () => {
-              this.pacientes.push(pacienteTemp);
+              pacientesTemporales.push(pacienteTemp);
+              this.pacientes = pacientesTemporales;
             }
           });
         });
@@ -77,14 +69,24 @@ export class PatientsdoctorComponent implements OnInit {
       }
     });
   }
-   irAgregarPaciente() {
-  this.router.navigate(['/agregarpaciente']);
-}
 
-  pacientesFiltrados() {
-    return this.pacientes.filter(p =>
+  irAgregarPaciente() {
+    this.router.navigate(['/agregarpaciente']);
+  }
+
+  pacientesFiltrados(): any[] {
+    const filtrados = this.pacientes.filter(p =>
       p.nombre.toLowerCase().includes(this.busqueda.toLowerCase())
     );
+    const start = (this.currentPage - 1) * this.itemsPerPage;
+    return filtrados.slice(start, start + this.itemsPerPage);
+  }
+
+  cambiarPacienteActual(paciente: any): void {
+    localStorage.setItem('nombrePaciente', paciente.nombre);
+    this.patient = paciente.nombre;
+    this.pacientes.forEach(p => p.actual = false);
+    paciente.actual = true;
   }
 
   calcularEdad(nacimiento: string): number | string {
@@ -103,6 +105,24 @@ export class PatientsdoctorComponent implements OnInit {
     const tipos = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
     return tipos[id - 1] || '—';
   }
- 
 
+  // 🔁 Paginación
+  get hayMas(): boolean {
+    const filtrados = this.pacientes.filter(p =>
+      p.nombre.toLowerCase().includes(this.busqueda.toLowerCase())
+    );
+    return this.currentPage * this.itemsPerPage < filtrados.length;
+  }
+
+  get hayAnterior(): boolean {
+    return this.currentPage > 1;
+  }
+
+  verMas(): void {
+    if (this.hayMas) this.currentPage++;
+  }
+
+  verMenos(): void {
+    if (this.hayAnterior) this.currentPage--;
+  }
 }

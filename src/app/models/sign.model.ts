@@ -1,4 +1,5 @@
-export interface SignoVital {
+// src/app/models/sign.model.ts
+export interface Sign {
   id_signos_paciente: number;
   id_paciente: number;
   id_signo: number;
@@ -6,4 +7,5 @@ export interface SignoVital {
   unidad: string;
   fecha: string;
   hora: string;
+  turno?: string;
 }

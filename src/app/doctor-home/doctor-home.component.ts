@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core';
-import { NgChartsModule } from 'ng2-charts';
-import { ChartConfiguration } from 'chart.js';
-import { SignosService } from '../services/signos.service';
-import { SignoVital } from '../models/signo-vital.model';
 import { CommonModule } from '@angular/common';
-import { SidebardoctorComponent } from "../sidebardoctor/sidebardoctor.component";
-import { DoctorService } from '../services/doctor.service';
-import Swal from 'sweetalert2';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
+import { NgChartsModule } from 'ng2-charts';
+import { ChartConfiguration, ChartData } from 'chart.js';
+import { SidebardoctorComponent } from '../sidebardoctor/sidebardoctor.component';
+import { DoctorService } from '../services/doctor.service';
+import { SignosWsService } from '../services/signos-ws.service';
 
 @Component({
   selector: 'app-doctor-home',
@@ -19,97 +18,164 @@ import { Router } from '@angular/router';
 export class DoctorHomeComponent implements OnInit {
   doctor = localStorage.getItem('nombreDoctor') || 'Dr. Ana Paula';
   patient = localStorage.getItem('nombrePaciente') || 'Luna Vazquez';
+  idPaciente = 4;
+  idDoctor = Number(localStorage.getItem('iduser')) || 0;
 
-  chartData: ChartConfiguration<'line'>['data']['datasets'] = [];
-  chartLabels: string[] = [];
-  chartOptions: ChartConfiguration<'line'>['options'] = {
+  ultimaFrecuencia = 0;
+  ultimaSaturacion = 0;
+  ultimaTemperatura = 0;
+  ultimaActividad = 0;
+
+  pieChartOptions = { responsive: true };
+
+  barChartOptionsAmarillo: ChartConfiguration<'bar'>['options'] = {
     responsive: true,
-    elements: {
-      line: { tension: 0.4 }
-    },
+    plugins: { legend: { display: false } },
     scales: {
-      y: { title: { display: true, text: '°C' } },
-      x: { title: { display: true, text: 'Fecha y Hora' } }
+      x: { display: false },
+      y: { title: { display: true, text: 'Valor' }, min: 0, ticks: { stepSize: 20 } }
     }
   };
 
+  barChartOptionsAzul: ChartConfiguration<'bar'>['options'] = {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { display: false },
+      y: {
+        min: 0,
+        max: 100,
+        ticks: { stepSize: 10 },
+        title: { display: true, text: 'Porcentaje (%)' }
+      }
+    }
+  };
+
+  barChartOptionsVerde: ChartConfiguration<'bar'>['options'] = {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { display: false },
+      y: {
+        min: 0,
+        max: 100,
+        ticks: { stepSize: 20 },
+        title: { display: true, text: 'Intensidad (%)' }
+      }
+    }
+  };
+
+  barChartFrecuencia: ChartData<'bar'> = {
+    labels: [''],
+    datasets: [{ data: [], label: 'Frecuencia', backgroundColor: '#FBBF24' }]
+  };
+
+  barChartSaturacion: ChartData<'bar'> = {
+    labels: [''],
+    datasets: [{ data: [], label: 'Saturación', backgroundColor: '#3B82F6' }]
+  };
+
+  barChartActividad: ChartData<'bar'> = {
+    labels: [''],
+    datasets: [{ data: [], label: 'Actividad', backgroundColor: '#10B981' }]
+  };
+
+  pieChartTemperatura: ChartData<'pie', number[], string> = {
+    labels: ['Temperatura', 'Resto'],
+    datasets: [{
+      data: [0, 100],
+      backgroundColor: ['#EF4444', '#F3F4F6']
+    }]
+  };
+
   constructor(
-    private signosService: SignosService,
+    private signosWsService: SignosWsService,
     private doctorService: DoctorService,
     private router: Router
   ) {}
 
   ngOnInit() {
-    console.log('🟢 Componente DoctorHome inicializado');
-    this.verificarPacientes();
-    this.cargarGrafica();
-  }
-
-  verificarPacientes() {
-    const idDoctor = Number(localStorage.getItem('iduser'));
-    console.log('🩺 ID de doctor detectado (desde iduser):', idDoctor);
-
-    if (!idDoctor || isNaN(idDoctor)) {
-      console.warn('⚠️ ID de doctor inválido en localStorage');
+    console.log('🧠 DoctorHomeComponent inicializado');
+    const token = localStorage.getItem('token') || '';
+    console.log('🧪 Token obtenido para WS:', token);
+    if (!token) {
+      alert('❌ Token no encontrado en localStorage. No se puede conectar al WebSocket.');
       return;
     }
 
-    this.doctorService.getPacientesPorDoctor(idDoctor).subscribe({
-      next: (res) => {
-        console.log('📦 Respuesta del backend al verificar pacientes:', res);
+    this.signosWsService.conectar(token);
 
-        const pacientes = res?.data ?? [];
+    this.signosWsService.getDatos().subscribe((msg: any) => {
+      console.log('📨 Mensaje WebSocket recibido:', msg);
 
-        if (!Array.isArray(pacientes) || pacientes.length === 0) {
-          const recienAsignado = localStorage.getItem('recienAsignado') === 'true';
+      if (!msg || !msg.event) return;
 
-          if (recienAsignado) {
-            console.warn('⚠️ Backend regresó null o vacío, pero se acaba de asignar un paciente. Forzamos carga');
-            localStorage.removeItem('recienAsignado');
-            return;
-          }
+      // Evento de signos vitales
+      if (msg.event === 'new_Sign') {
+        const data = msg.data;
+        if (!data || Number(data.id_paciente) !== this.idPaciente) return;
 
-          Swal.fire({
-            title: 'Sin pacientes',
-            text: 'No tienes pacientes registrados aún. ¿Deseas agregar uno?',
-            icon: 'info',
-            showCancelButton: true,
-            confirmButtonText: 'Agregar paciente'
-          }).then((result) => {
-            if (result.isConfirmed) {
-              this.router.navigate(['/agregarpaciente']);
-            }
-          });
-        } else {
-          console.log(`✅ Pacientes encontrados: ${pacientes.length}`);
+        const valor = Number(data.valor || 0);
+
+        switch (data.id_signo) {
+          case 1:
+            this.ultimaSaturacion = valor;
+            this.barChartSaturacion.labels = [''];
+            this.barChartSaturacion.datasets[0].data = [valor];
+            break;
+          case 2:
+            this.ultimaTemperatura = valor;
+            const tempValor = Math.min(Math.max(valor, 0), 100);
+            const restante = 100 - tempValor;
+            this.pieChartTemperatura = {
+              labels: ['Temperatura', 'Resto'],
+              datasets: [{ data: [tempValor, restante], backgroundColor: ['#EF4444', '#F3F4F6'] }]
+            };
+            break;
+          case 3:
+            this.ultimaFrecuencia = valor;
+            this.barChartFrecuencia.labels = [''];
+            this.barChartFrecuencia.datasets[0].data = [valor];
+            break;
+          case 6:
+            this.ultimaActividad = valor;
+            this.barChartActividad.labels = [''];
+            this.barChartActividad.datasets[0].data = [valor];
+            break;
         }
-      },
-      error: (err) => {
-        console.error('❌ Error al consultar pacientes:', err);
-        Swal.fire('Error', 'No se pudo verificar pacientes. Token inválido o expirado.', 'error');
+      }
+
+      // Evento de movimiento brusco
+      if (msg.event === 'new_motion') {
+        const movimiento = msg.data?.movimiento;
+        const idpaciente = Number(msg.data?.idpaciente);
+
+        if (movimiento && idpaciente === this.idPaciente) {
+          console.log('🎯 Movimiento brusco detectado:', msg.data);
+          Swal.fire({
+            icon: 'warning',
+            title: '⚠️ Movimiento brusco detectado',
+            text: 'Se ha detectado un movimiento anormal del paciente.',
+            confirmButtonText: 'Entendido',
+            confirmButtonColor: '#F59E0B'
+          });
+        }
       }
     });
   }
 
-  cargarGrafica() {
-    this.signosService.getSignos().subscribe({
-      next: (datos: SignoVital[]) => {
-        const TEMPERATURA_ID = 2;
-        const temperatura = datos.filter(d => d.id_signo === TEMPERATURA_ID);
-
-        this.chartLabels = temperatura.map(d => `${d.fecha} ${d.hora}`);
-        this.chartData = [{
-          data: temperatura.map(d => d.valor),
-          label: 'Temperatura (°C)',
-          fill: false,
-          borderColor: '#2F65BB',
-          backgroundColor: '#A6C2F0',
-          tension: 0.4
-        }];
-      },
-      error: (error) => {
-        console.error('❌ Error al obtener signos vitales:', error);
-      }
-    });
+  mapearNombreSigno(id: number): string {
+    switch (id) {
+      case 1: return 'Saturación de oxígeno';
+      case 2: return 'Temperatura corporal';
+      case 3: return 'Frecuencia cardíaca';
+      case 4: return 'Presión arterial media';
+      case 5: return 'Frecuencia respiratoria';
+      case 6: return 'Actividad eléctrica del corazón';
+      case 7: return 'Movimiento brusco';
+      default: return 'Otro';
+    }
   }
 }
+
+

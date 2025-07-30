@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectorRef } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterLink, RouterModule } from '@angular/router';
 import { ModalMapaComponent } from '../modal-mapa/modal-mapa.component';
@@ -6,8 +6,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Hospital } from '../models/Hospital';
 import { HospitalService } from '../services/hospital.service';
-import Swal from 'sweetalert2';
 import { WorkerService } from '../services/worker.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-agregarhospital',
@@ -18,6 +18,7 @@ import { WorkerService } from '../services/worker.service';
 })
 export class AgregarhospitalComponent {
   showMap = false;
+  ubicacionDesdeMapa: boolean = false;
 
   hospital: Hospital = {
     nombre: '',
@@ -28,7 +29,8 @@ export class AgregarhospitalComponent {
   constructor(
     private hospitalService: HospitalService,
     private workerService: WorkerService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef
   ) {}
 
   abrirMapa() {
@@ -38,7 +40,13 @@ export class AgregarhospitalComponent {
   onUbicacionSeleccionada(direccion: string) {
     console.log('📍 Ubicación recibida:', direccion);
     this.hospital.ubicacion = direccion;
+    this.ubicacionDesdeMapa = true;
+    this.cdr.detectChanges();
     this.showMap = false;
+  }
+
+  limpiarUbicacion() {
+    this.ubicacionDesdeMapa = false;
   }
 
   async agregarHospital() {
@@ -59,9 +67,9 @@ export class AgregarhospitalComponent {
       return;
     }
 
-    const cluesRegex = /^[A-Z0-9]{8}$/;
+    const cluesRegex = /^[A-Z]{5}[0-9]{6}$/;
     if (!cluesRegex.test(this.hospital.clues.trim().toUpperCase())) {
-      await Swal.fire('CLUES inválida', 'Debe tener 8 caracteres alfanuméricos. Ejemplo: 20HJ1234', 'error');
+      await Swal.fire('CLUES inválida', 'Debe tener 5 letras seguidas de 6 números. Ejemplo: HGIMB002304', 'error');
       return;
     }
 
@@ -70,6 +78,8 @@ export class AgregarhospitalComponent {
       clues: this.hospital.clues.trim().toUpperCase(),
       doctorCorreo
     };
+
+    console.log('🏥 Hospital a registrar:', hospitalConDoctor);
 
     Swal.fire({ title: 'Registrando hospital...', icon: 'info', timer: 1000, showConfirmButton: false });
 
@@ -81,7 +91,6 @@ export class AgregarhospitalComponent {
         console.log('📝 ID hospital registrado:', idHospital);
         console.log('👨‍⚕️ ID doctor:', idUsuario);
 
-        // ✅ GUARDAR EL HOSPITAL COMO SELECCIONADO PARA FUTURA RELACIÓN
         if (idHospital) {
           localStorage.setItem('hospitalSeleccionadoId', idHospital.toString());
         }
@@ -103,11 +112,9 @@ export class AgregarhospitalComponent {
 
         await Swal.fire('¡Registro exitoso!', 'El hospital fue agregado correctamente.', 'success');
         this.hospital = { nombre: '', ubicacion: '', clues: '' };
-
+        this.ubicacionDesdeMapa = false;
         localStorage.removeItem('doctorTemporalCorreo');
-
-        // ✅ REDIRECCIÓN AL LOGIN DONDE YA ESTARÁ SELECCIONADO EL HOSPITAL
-        this.router.navigate(['/logindoctor']);
+        this.router.navigate(['/login']);
       },
       error: async err => {
         console.error('❌ Error al agregar hospital:', err);

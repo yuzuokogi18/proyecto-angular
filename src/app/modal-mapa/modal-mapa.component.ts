@@ -42,7 +42,7 @@ export class ModalMapaComponent implements AfterViewInit {
     const service = new google.maps.places.PlacesService(this.map);
     service.nearbySearch({
       location: tuxtlaCoords,
-      radius: 30000, // 30 km para incluir cercanos y lejanos
+      radius:  3000, // 30 km para incluir cercanos y lejanos
       type: 'hospital'
     }, (results, status) => {
       if (status !== google.maps.places.PlacesServiceStatus.OK || !results) {
