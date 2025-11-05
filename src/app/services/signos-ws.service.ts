@@ -7,14 +7,23 @@ import { Observable, Subject } from 'rxjs';
 export class SignosWsService {
   private socket!: WebSocket;
   private subject = new Subject<any>();
+  private reconectarIntentos = 0;
+  private maxIntentos = 3;
 
-  conectar(token: string) {
-    const wsUrl = `https://pulsesenseapi.ddns.net/ws/connect?token=${token}`;
+  conectar(token?: string): void {
+    const finalToken = token || localStorage.getItem('token');
+    if (!finalToken) {
+      console.error('❌ No se encontró token para conectar al WebSocket.');
+      return;
+    }
+
+    const wsUrl = `wss://pulsesenseapi.ddns.net/ws/connect?token=${finalToken}`;
     console.log('🔌 Conectando al WebSocket con URL:', wsUrl);
     this.socket = new WebSocket(wsUrl);
 
     this.socket.onopen = () => {
       console.log('✅ WebSocket abierto correctamente');
+      this.reconectarIntentos = 0;
     };
 
     this.socket.onmessage = (event) => {
@@ -34,6 +43,15 @@ export class SignosWsService {
 
     this.socket.onclose = (event) => {
       console.warn('🔒 WebSocket cerrado. Código:', event.code, 'Razón:', event.reason);
+
+      // Opcional: intento de reconexión básica
+      if (this.reconectarIntentos < this.maxIntentos) {
+        this.reconectarIntentos++;
+        console.log(`🔁 Intentando reconectar (#${this.reconectarIntentos}) en 3 segundos...`);
+        setTimeout(() => this.conectar(finalToken), 3000);
+      } else {
+        console.error('❗ Se alcanzó el número máximo de intentos de reconexión.');
+      }
     };
   }
 

@@ -25,21 +25,22 @@ export class DoctorService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`https://pulsesenseapi.ddns.net/doctor/patient/user/${idDoctor}`, { headers });
   }
+
   getEnfermerosPorPaciente(idPaciente: number): Observable<any> {
-  const token = localStorage.getItem('token');
-  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  return this.http.get<any>(`https://pulsesenseapi.ddns.net/users/nurses/patient/${idPaciente}`, { headers });
-}
- getPacientesPorEnfermero(idEnfermero: number): Observable<any> {
-  const token = localStorage.getItem('token');
-  const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-  return this.http.get<any>(`https://pulsesenseapi.ddns.net/nurse/patient/user/${idEnfermero}`, { headers });
-}
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`https://pulsesenseapi.ddns.net/users/nurses/patient/${idPaciente}`, { headers });
+  }
+
+  getPacientesPorEnfermero(idEnfermero: number): Observable<any> {
+    const token = localStorage.getItem('token');
+    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+    return this.http.get<any>(`https://pulsesenseapi.ddns.net/nurse/patient/user/${idEnfermero}`, { headers });
+  }
+
   getEnfermerosPorDoctor(idDoctor: number): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`https://pulsesenseapi.ddns.net/nursepatient/${idDoctor}`, { headers });
   }
-
-
 }
