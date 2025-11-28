@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class WorkerService {
-  private apiUrl = 'https://pulsesenseapi.ddns.net/workers';
+  private apiUrl = 'http://localhost:8080/workers';
 
   constructor(private http: HttpClient) {}
 

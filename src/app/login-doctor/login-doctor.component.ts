@@ -1,5 +1,4 @@
-// src/app/login-doctor/login-doctor.component.ts
-
+import { jwtDecode } from 'jwt-decode';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterLink, RouterModule } from '@angular/router';
@@ -27,79 +26,82 @@ export class LoginDoctorComponent {
     private router: Router
   ) {}
 
-  iniciarSesion() {
+iniciarSesion() {
     if (!this.correo || !this.contrasena) {
       alert('⚠️ Por favor llena todos los campos');
       return;
     }
 
-    const data = {
-      correo: this.correo,
-      contrasena: this.contrasena
-    };
+    const data = { correo: this.correo, contrasena: this.contrasena };
 
     this.doctorService.loginDoctor(data).subscribe({
       next: (res: any) => {
-        console.log('✔️ Login exitoso:', res);
-        const body = res.body;
+        // A. OBTENER EL HEADER
+        const authHeader = res.headers.get('Authorization');
 
-        const token = body?.token;
-        const idUsuario = body?.iduser || body?.user_id || body?.id_usuario;
-       const nombre = body?.nombre || '';
-        const apellido_p = body?.apellido_p || '';
-        const apellido_m = body?.apellido_m || '';
-
-        const nombreDoctor = `${nombre} ${apellido_p} ${apellido_m}`.trim();
-        console.log('👨‍⚕️ Nombre completo del doctor guardado:', nombreDoctor);
-
-        if (token) localStorage.setItem('token', token);
-        if (idUsuario) localStorage.setItem('iduser', idUsuario.toString());
-        if (nombreDoctor) localStorage.setItem('nombreDoctor', nombreDoctor);
-
-        if (token) localStorage.setItem('token', token);
-        if (idUsuario) localStorage.setItem('iduser', idUsuario.toString());
-
-        const idHospital = localStorage.getItem('hospitalSeleccionadoId');
-
-        // ✅ Validar que el hospital esté seleccionado correctamente
-        if (!idHospital || isNaN(Number(idHospital)) || Number(idHospital) <= 0) {
-          Swal.fire('⚠️ Selección requerida', 'Por favor elige un hospital antes de iniciar sesión.', 'warning');
-          return;
+        if (!authHeader) {
+             console.error('❌ No llegó el header Authorization');
+             return;
         }
 
-        // Verificamos si el doctor ya está asignado
-        this.verificarRelacionService.verificarDoctorAsignado(Number(idUsuario)).subscribe({
-          next: (response: any) => {
-            const yaAsignado = response?.assigned;
+        const token = authHeader.replace('Bearer ', '').trim();
 
-            console.log('🔍 Respuesta completa del endpoint /verify/:id:', response);
+        try {
+            const decodedToken: any = jwtDecode(token);
+            console.log('📦 Datos dentro del token:', decodedToken);
 
-            if (yaAsignado) {
-              console.log('ℹ️ Doctor ya vinculado previamente');
-              Swal.fire('✅ Bienvenido', 'Ya estás vinculado a un hospital.', 'info');
-              this.router.navigate(['/doctorhome']);
-            } else {
-              this.asociarDoctorHospital(idUsuario, idHospital);
+            const idUsuario = decodedToken.id || decodedToken.user_id || decodedToken.sub;
+            
+            const nombreDoctor = decodedToken.nombre || decodedToken.name || 'Doctor';
+
+            if (!idUsuario) {
+                console.error('El token no contiene el ID del usuario');
+                Swal.fire('Error', 'Token inválido: Falta ID de usuario', 'error');
+                return;
             }
-          },
-          error: (err: any) => {
-            if (err.status === 404) {
-              console.warn('ℹ️ El doctor no tiene hospital aún, creando relación...');
-              this.asociarDoctorHospital(idUsuario, idHospital);
-            } else {
-              console.error('❌ Error al verificar asociación:', err);
-              Swal.fire('❌ Error', 'No se pudo verificar hospital existente.', 'error');
+
+            console.log('✅ ID Usuario extraído:', idUsuario);
+
+            localStorage.setItem('token', token);
+            localStorage.setItem('iduser', idUsuario.toString());
+            localStorage.setItem('nombreDoctor', nombreDoctor);
+
+            const idHospital = localStorage.getItem('hospitalSeleccionadoId');
+
+            if (!idHospital || isNaN(Number(idHospital))) {
+                Swal.fire('⚠️ Selección requerida', 'Por favor elige un hospital.', 'warning');
+                return;
             }
-          }
-        });
+
+            this.verificarRelacionService.verificarDoctorAsignado(Number(idUsuario)).subscribe({
+                next: (response: any) => {
+                    if (response?.assigned) {
+                        Swal.fire('✅ Bienvenido', 'Ya estás vinculado.', 'info');
+                        this.router.navigate(['/doctorhome']);
+                    } else {
+                        this.asociarDoctorHospital(Number(idUsuario), idHospital);
+                    }
+                },
+                error: (err) => {
+                     if (err.status === 404) {
+                        this.asociarDoctorHospital(Number(idUsuario), idHospital);
+                     } else {
+                        console.error(err);
+                     }
+                }
+            });
+
+        } catch (error) {
+            console.error('❌ Error al decodificar el token:', error);
+        }
       },
-      error: (err: any) => {
-        console.error('❌ Error en login:', err);
-        alert('❌ Correo o contraseña incorrectos.');
+      error: (err) => {
+        console.error(err);
+        alert('❌ Error al iniciar sesión');
       }
     });
   }
-
+  
   private asociarDoctorHospital(idUsuario: number, idHospital: string | null): void {
     if (!idHospital || isNaN(Number(idHospital)) || Number(idHospital) <= 0) {
       console.warn('⚠️ idHospital es null o inválido');
