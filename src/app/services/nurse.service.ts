@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class NurseService {
-  private apiUrl = 'http://localhost:8080'; // CAMBIO AQUI
+  private apiUrl = 'https://pulsesenseapi.servemp3.com'; // CAMBIO AQUI
 
   constructor(private http: HttpClient) {}
 
