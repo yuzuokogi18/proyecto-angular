@@ -22,6 +22,7 @@ import { DoctoresasignadosComponent } from './doctoresasignados/doctoresasignado
 import { EnfermerosAsignadosComponent } from './enfermeros-asignados/enfermeros-asignados.component';
 import { ReportesPacienteComponent } from './reportes-paciente/reportes-paciente.component';
 import { HistorialPacienteComponent } from './historial-paciente/historial-paciente.component';
+import { DispositivosdoctorComponent } from './dispositivosdoctor/dispositivosdoctor.component';
 
 
 export const routes: Routes = [{ path: '', component:HomeComponent },
@@ -38,6 +39,8 @@ export const routes: Routes = [{ path: '', component:HomeComponent },
 
   { path: 'agregarpaciente', component: AgregarPacienteComponent },
    { path: 'doctorhome', component: DoctorHomeComponent },
+    { path: 'dispositivosdoctor', component: DispositivosdoctorComponent },
+
    { path: 'sidebardoctor', component: SidebardoctorComponent },
     { path: 'patientsdoctor', component: PatientsdoctorComponent },
    

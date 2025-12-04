@@ -43,4 +43,19 @@ export class DoctorService {
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`https://pulsesenseapi.servemp3.com/nursepatient/${idDoctor}`, { headers });
   }
+  relacionarDispositivoConDoctor(codigoDispositivo: string, idDoctor: number): Observable<any> {
+  const token = localStorage.getItem('token');
+  const headers = new HttpHeaders({
+    Authorization: `Bearer ${token}`,
+    'Content-Type': 'application/json'
+  });
+
+  const body = { id_doctor: idDoctor };
+
+  return this.http.put(
+    `https://pulsesenseapi.servemp3.com/doctor/patient/${codigoDispositivo}`,
+    body,
+    { headers }
+  );
+}
 }

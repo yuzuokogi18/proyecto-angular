@@ -1,19 +1,21 @@
-<div class="flex bg-gray-100 min-h-screen font-[Junge]">
-  <!-- Sidebar del enfermero -->
+<div class="flex h-screen font-sans bg-white">
+  <!-- Sidebar -->
   <app-sidebarenfermero></app-sidebarenfermero>
 
   <!-- Contenido principal -->
-   <div class="flex-1 p-6">
+  <main class="flex-1 p-6 overflow-hidden">
+
     <!-- Encabezado -->
-    <div class="flex justify-between items-center mb-8">
+    <div class="flex justify-between items-center mb-4">
+      
       <!-- Paciente -->
       <div class="flex items-center gap-4">
-        <div class="bg-[#A6C2F0] rounded-full w-12 h-12 flex items-center justify-center text-[#2F65BB] font-bold text-2xl">
+        <div class="bg-[#A6C2F0] rounded-full w-12 h-12 flex items-center justify-center text-[#2F65BB] font-bold">
           👤
         </div>
         <div>
-          <p class="text-lg font-medium text-gray-700">Paciente</p>
-          <p class="text-xl font-bold text-gray-900">
+          <p class="text-lg font-medium">Paciente</p>
+          <p class="text-xl font-bold">
             {{ nombrePaciente !== 'Paciente' ? nombrePaciente : 'Sin paciente asignado' }}
           </p>
         </div>
@@ -22,43 +24,89 @@
       <!-- Enfermero -->
       <div class="text-right">
         <p class="text-sm text-gray-500">👨‍⚕️ Enfermero</p>
-        <p class="text-base sm:text-lg font-semibold text-blue-700">{{ nombreEnfermero }}</p>
+        <p class="font-medium">{{ nombreEnfermero }}</p>
       </div>
     </div>
 
-    <!-- Gráficas -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <!-- Tarjetas -->
+    <div class="grid grid-cols-2 grid-rows-2 gap-4 h-[calc(100%-5rem)]">
+
       <!-- Presión arterial -->
-      <div class="bg-white p-4 rounded-lg shadow">
-        <h3 class="text-lg font-semibold text-blue-700 mb-2">Presión Arterial</h3>
-        <div class="h-60">
-          <canvas id="graficaPresion"></canvas>
+      <div class="bg-white shadow-md rounded-xl p-4 border-t-4 border-blue-400 flex flex-col">
+        <p class="text-lg font-bold text-blue-500 mb-4">🫀 Presión arterial</p>
+        <div class="flex items-center justify-center mb-2">
+          <div class="text-[60px] font-extrabold text-blue-500 leading-none tracking-tight">
+            {{ ultimaPresion || 0 }}
+          </div>
+        </div>
+        <div class="h-40 px-2 pt-2 pb-6">
+          <canvas baseChart
+                  [datasets]="barChartPresion.datasets"
+                  [labels]="barChartPresion.labels"
+                  [options]="barChartOptionsAzul"
+                  [legend]="false"
+                  [type]="'bar'">
+          </canvas>
         </div>
       </div>
 
       <!-- Frecuencia cardíaca -->
-      <div class="bg-white p-4 rounded-lg shadow">
-        <h3 class="text-lg font-semibold text-blue-700 mb-2">Frecuencia Cardíaca</h3>
-        <div class="h-60">
-          <canvas id="graficaFrecuencia"></canvas>
+      <div class="bg-white shadow-md rounded-xl p-4 border-t-4 border-yellow-400 flex flex-col">
+        <p class="text-lg font-bold text-yellow-500 mb-4">💕 Frecuencia cardíaca</p>
+        <div class="flex items-center justify-center mb-2">
+          <div class="text-[60px] font-extrabold text-yellow-500 leading-none tracking-tight">
+            {{ ultimaFrecuencia || 0 }}
+          </div>
+        </div>
+        <div class="h-40 px-2 pt-2 pb-6">
+          <canvas baseChart
+                  [datasets]="barChartFrecuencia.datasets"
+                  [labels]="barChartFrecuencia.labels"
+                  [options]="barChartOptionsAmarillo"
+                  [legend]="false"
+                  [type]="'bar'">
+          </canvas>
         </div>
       </div>
 
-      <!-- Actividad física (1) -->
-      <div class="bg-white p-4 rounded-lg shadow">
-        <h3 class="text-lg font-semibold text-blue-700 mb-2">Actividad Física - Día</h3>
-        <div class="h-60">
-          <canvas id="graficaActividad1"></canvas>
+      <!-- Actividad física -->
+      <div class="bg-white shadow-md rounded-xl p-4 border-t-4 border-green-400 flex flex-col">
+        <p class="text-lg font-bold text-green-600 mb-4">🏃 Actividad física</p>
+        <div class="flex items-center justify-center mb-2">
+          <div class="text-[60px] font-extrabold text-green-600">
+            {{ ultimaActividad || 0 }}
+          </div>
+        </div>
+        <div class="h-40 px-2 pt-2 pb-6">
+          <canvas baseChart
+                  [datasets]="barChartActividad.datasets"
+                  [labels]="barChartActividad.labels"
+                  [options]="barChartOptionsVerde"
+                  [legend]="false"
+                  [type]="'bar'">
+          </canvas>
         </div>
       </div>
 
-      <!-- Actividad física (2) -->
-      <div class="bg-white p-4 rounded-lg shadow">
-        <h3 class="text-lg font-semibold text-blue-700 mb-2">Actividad Física - Semana</h3>
-        <div class="h-60">
-          <canvas id="graficaActividad2"></canvas>
+      <!-- Actividad semanal -->
+      <div class="bg-white shadow-md rounded-xl p-4 border-t-4 border-purple-400 flex flex-col">
+        <p class="text-lg font-bold text-purple-600 mb-4">📅 Actividad semanal</p>
+        <div class="flex items-center justify-center mb-2">
+          <div class="text-[60px] font-extrabold text-purple-600">
+            {{ ultimaSemana || 0 }}
+          </div>
+        </div>
+        <div class="h-40 px-2 pt-2 pb-6">
+          <canvas baseChart
+                  [datasets]="barChartSemana.datasets"
+                  [labels]="barChartSemana.labels"
+                  [options]="barChartOptionsMorado"
+                  [legend]="false"
+                  [type]="'bar'">
+          </canvas>
         </div>
       </div>
+
     </div>
-  </div>
+  </main>
 </div>

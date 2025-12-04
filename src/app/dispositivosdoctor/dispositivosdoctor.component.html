@@ -1,0 +1,55 @@
+<!-- Contenedor principal centrado con marco negro como en la imagen -->
+<div class="min-h-screen flex items-center justify-center bg-gray-100 p-6">
+  <div class="w-full max-w-4xl bg-white shadow-lg relative" style="border:10px solid #111;">
+
+  
+
+    <div class="flex flex-col md:flex-row">
+
+      <!-- Izquierda: solo ilustración -->
+      <div class="md:w-1/2 p-8 flex flex-col items-center justify-center bg-white">
+        <div class="w-full flex justify-center items-center">
+          <img src="assets/Dispositivodoct.png"
+               alt="Ilustración dispositivo"
+               class="max-w-xs md:max-w-md z-10" />
+        </div>
+      </div>
+
+      <!-- Derecha: formulario -->
+      <div class="md:w-1/2 p-10 flex flex-col justify-center">
+        <h2 class="text-2xl md:text-3xl font-semibold text-gray-800 mb-6 text-right">DISPOSITIVO</h2>
+
+        <form [formGroup]="codeForm" (ngSubmit)="onSubmit()" class="w-full">
+          <div class="mb-4 flex items-center justify-end">
+            <label for="code" class="mr-6 text-right text-gray-700">Ingresa el Código :</label>
+            <input id="code" type="text" formControlName="code"
+                   class="border border-gray-300 rounded-md px-3 py-2 w-40 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                   placeholder="Código">
+          </div>
+
+          <!-- Mensaje de error -->
+        <div class="mb-3 text-right">
+  <div *ngIf="submitted && f['code'].errors" class="text-sm text-red-600">
+    <div *ngIf="f['code'].errors['required']">El código es obligatorio.</div>
+    <div *ngIf="f['code'].errors['minlength']">Mínimo 3 caracteres.</div>
+  </div>
+</div>
+
+
+          <!-- Botón -->
+          <div class="flex justify-end mt-6">
+            <button type="submit"
+                    class="px-6 py-2 bg-blue-700 text-white font-medium rounded shadow hover:bg-blue-800 transition">
+              Vamos
+            </button>
+          </div>
+        </form>
+
+        <!-- Pie / espacio opcional -->
+        <div class="mt-6 text-right text-xs text-gray-400">
+          <span>— Pulse Sense</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -14,6 +14,7 @@ import Swal from 'sweetalert2';
   styleUrl: './agregar-paciente.component.css'
 })
 export class AgregarPacienteComponent {
+
   paciente = {
     nombres: '',
     apellido_p: '',
@@ -23,7 +24,8 @@ export class AgregarPacienteComponent {
     estatura: null,
     sexo: '',
     id_tipo_sangre: null,
-    numero_emergencia: ''
+    numero_emergencia: '',
+    correo: ''   // <-- IMPORTANTE! Tu API lo requiere
   };
 
   tiposSangre = [
@@ -43,18 +45,22 @@ export class AgregarPacienteComponent {
   ) {}
 
   agregarPaciente(form: any) {
+    console.log("📌 Validando formulario...");
+
     if (!form.valid) {
       Swal.fire('Error', 'Por favor corrige los errores del formulario antes de continuar', 'error');
       return;
     }
 
     const idDoctor = Number(localStorage.getItem('iduser') || localStorage.getItem('doctorId'));
-    if (idDoctor <= 0) {
+    console.log("👨‍⚕️ ID Doctor:", idDoctor);
+
+    if (!idDoctor || idDoctor <= 0) {
       Swal.fire('Error', 'No se encontró el ID del doctor', 'error');
       return;
     }
 
-    const data = {
+    const data: any = {
       ...this.paciente,
       peso: Number(this.paciente.peso),
       estatura: Number(this.paciente.estatura),
@@ -62,11 +68,24 @@ export class AgregarPacienteComponent {
       id_doctor: idDoctor
     };
 
+    // 🚫 Corregido: NO mandar id_paciente vacío
+    if (data.id_paciente === '' || data.id_paciente === null || data.id_paciente === undefined) {
+      delete data.id_paciente;
+    }
+
+    console.log("📤 ENVIANDO AL BACKEND:", data);
+
     this.pacienteService.crearPaciente(data).subscribe({
       next: (res: any) => {
-        const idPaciente = res?.id_paciente || res?.id || res?.data?.id_paciente || res?.data?.id;
+        console.log("📥 RESPUESTA DEL BACKEND:", res);
 
-        if (!idPaciente || isNaN(Number(idPaciente))) {
+        const idPaciente =
+          res?.id_paciente ||
+          res?.id ||
+          res?.data?.id_paciente ||
+          res?.data?.id;
+
+        if (!idPaciente) {
           Swal.fire('Error', 'No se pudo obtener el ID del paciente', 'error');
           return;
         }
@@ -80,8 +99,10 @@ export class AgregarPacienteComponent {
           });
         });
       },
-      error: () => {
-        Swal.fire('Error', 'No se pudo agregar el paciente', 'error');
+
+      error: (err) => {
+        console.error("❌ ERROR COMPLETO =>", err);
+        Swal.fire('Error', err.error?.error || 'No se pudo agregar el paciente', 'error');
       }
     });
   }

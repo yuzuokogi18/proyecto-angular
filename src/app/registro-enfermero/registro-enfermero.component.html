@@ -1,64 +1,117 @@
-<div class="flex flex-col md:flex-row min-h-screen bg-white relative font-[Junge]">
+<div class="flex flex-col lg:flex-row min-h-screen bg-white relative font-[Junge]">
 
   <!-- Logo -->
-  <div class="absolute top-4 left-4 md:top-6 md:left-6 z-50">
-    <img src="assets/logo2.png" alt="Pulse Sense" class="h-20 md:h-24 w-auto" />
+  <div class="absolute top-4 left-4 z-50">
+    <img src="assets/logo2.png" alt="Pulse Sense" class="h-20 w-auto sm:h-24 md:h-28" />
   </div>
 
-  <!-- Imagen enfermeros -->
-  <div class="w-full md:w-1/2 flex items-center justify-center px-6 mt-24 md:mt-16">
-    <img src="assets/enferregis.png" alt="Enfermeros" class="w-full max-w-xs md:max-w-[520px]" />
+  <!-- Imagen enfermero -->
+  <div class="w-full lg:w-1/2 flex items-center justify-center px-6 py-8">
+    <img src="assets/enferregis.png" alt="Enfermeros" class="w-full max-w-[400px] md:max-w-[480px] lg:max-w-[520px] mt-8 lg:mt-16" />
   </div>
 
   <!-- Formulario -->
-  <div class="w-full md:w-1/2 flex flex-col justify-center px-6 md:px-20 py-10 md:py-0">
-    <h2 class="text-2xl md:text-4xl font-bold text-[#03045E] mb-8 text-left">Registrarse Enfermero</h2>
+  <div class="w-full lg:w-1/2 flex flex-col justify-center items-center px-6 sm:px-12 md:px-20 py-8">
+    <h2 class="text-3xl sm:text-4xl font-bold text-[#03045E] mb-6 sm:mb-8 text-left w-full max-w-md">
+      Registrarse Enfermero
+    </h2>
 
-    <form (ngSubmit)="registrar()" #form="ngForm" class="flex flex-col gap-4 w-full max-w-md">
+    <form (ngSubmit)="registrar(form)" #form="ngForm" class="flex flex-col gap-4 w-full max-w-md">
 
       <!-- Nombre -->
       <div>
-        <label class="block text-base md:text-lg font-semibold text-gray-800 mb-1">Nombre:</label>
+        <label class="block font-semibold mb-1">Nombre:</label>
         <input [(ngModel)]="enfermero.nombre" name="nombre" type="text" required
-          class="w-full border px-4 py-3 rounded-md" />
+          pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+          class="w-full border px-4 py-3 rounded-md"
+          [ngClass]="{'border-red-500': nombre.invalid && (nombre.touched || form.submitted)}"
+          #nombre="ngModel" />
+
+        <p *ngIf="nombre.errors?.['required'] && (nombre.touched || form.submitted)"
+          class="text-red-500 text-sm mt-1">El nombre es obligatorio.</p>
+        <p *ngIf="nombre.errors?.['pattern'] && (nombre.touched || form.submitted)"
+          class="text-red-500 text-sm mt-1">Solo letras y espacios.</p>
       </div>
 
-      <!-- Apellidos lado a lado en desktop -->
-      <div class="flex flex-col md:flex-row gap-4">
-        <!-- Apellido Paterno -->
-        <div class="w-full md:w-1/2">
-          <label class="block text-base font-semibold text-gray-800 mb-1">Apellido Paterno:</label>
+      <!-- Apellidos -->
+      <div class="flex flex-col sm:flex-row gap-4">
+
+        <!-- Paterno -->
+        <div class="w-full sm:w-1/2">
+          <label class="block font-semibold mb-1">Apellido Paterno:</label>
           <input [(ngModel)]="enfermero.apellido_p" name="apellido_p" type="text" required
-            class="w-full border px-3 py-2 rounded-md" />
+            pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+            class="w-full border px-3 py-2 rounded-md"
+            [ngClass]="{'border-red-500': apellido_p.invalid && (apellido_p.touched || form.submitted)}"
+            #apellido_p="ngModel" />
+
+          <p *ngIf="apellido_p.errors?.['required'] && (apellido_p.touched || form.submitted)"
+            class="text-red-500 text-sm mt-1">Campo obligatorio.</p>
+          <p *ngIf="apellido_p.errors?.['pattern'] && (apellido_p.touched || form.submitted)"
+            class="text-red-500 text-sm mt-1">Solo letras y espacios.</p>
         </div>
 
-        <!-- Apellido Materno -->
-        <div class="w-full md:w-1/2">
-          <label class="block text-base font-semibold text-gray-800 mb-1">Apellido Materno:</label>
+        <!-- Materno -->
+        <div class="w-full sm:w-1/2">
+          <label class="block font-semibold mb-1">Apellido Materno:</label>
           <input [(ngModel)]="enfermero.apellido_m" name="apellido_m" type="text" required
-            class="w-full border px-3 py-2 rounded-md" />
+            pattern="^[A-Za-zÁÉÍÓÚáéíóúÑñ\s]+$"
+            class="w-full border px-3 py-2 rounded-md"
+            [ngClass]="{'border-red-500': apellido_m.invalid && (apellido_m.touched || form.submitted)}"
+            #apellido_m="ngModel" />
+
+          <p *ngIf="apellido_m.errors?.['required'] && (apellido_m.touched || form.submitted)"
+            class="text-red-500 text-sm mt-1">Campo obligatorio.</p>
+          <p *ngIf="apellido_m.errors?.['pattern'] && (apellido_m.touched || form.submitted)"
+            class="text-red-500 text-sm mt-1">Solo letras y espacios.</p>
         </div>
       </div>
 
-      <!-- Cédula -->
+      <!-- Cédula Profesional -->
       <div>
-        <label class="block text-base md:text-lg font-semibold text-gray-800 mb-1">Cédula Profesional:</label>
-        <input [(ngModel)]="enfermero.cedula" name="cedula" type="text" required
-          class="w-full border px-4 py-3 rounded-md" />
+        <label class="block font-semibold mb-1">Cédula Profesional:</label>
+        <input [(ngModel)]="enfermero.cedula" name="cedula" type="text" required pattern="^\d{8}$"
+          class="w-full border px-4 py-3 rounded-md"
+          [ngClass]="{'border-red-500': cedula.invalid && (cedula.touched || form.submitted)}"
+          #cedula="ngModel" />
+
+        <p *ngIf="cedula.errors?.['required'] && (cedula.touched || form.submitted)"
+          class="text-red-500 text-sm mt-1">Campo obligatorio.</p>
+        <p *ngIf="cedula.errors?.['pattern'] && (cedula.touched || form.submitted)"
+          class="text-red-500 text-sm mt-1">Debe tener 8 dígitos numéricos.</p>
       </div>
 
       <!-- Correo -->
       <div>
-        <label class="block text-base md:text-lg font-semibold text-gray-800 mb-1">Correo:</label>
+        <label class="block font-semibold mb-1">Correo:</label>
         <input [(ngModel)]="enfermero.correo" name="correo" type="email" required
-          class="w-full border px-4 py-3 rounded-md bg-blue-50" />
+          class="w-full border px-4 py-3 rounded-md bg-blue-50"
+          [ngClass]="{'border-red-500': correo.invalid && (correo.touched || form.submitted)}"
+          #correo="ngModel" />
+
+        <p *ngIf="correo.errors?.['required'] && (correo.touched || form.submitted)"
+          class="text-red-500 text-sm mt-1">Campo obligatorio.</p>
+        <p *ngIf="correo.errors?.['email'] && (correo.touched || form.submitted)"
+          class="text-red-500 text-sm mt-1">Correo no válido.</p>
       </div>
 
       <!-- Contraseña -->
       <div>
-        <label class="block text-base md:text-lg font-semibold text-gray-800 mb-1">Contraseña:</label>
+        <label class="block font-semibold mb-1">Contraseña:</label>
         <input [(ngModel)]="enfermero.contrasena" name="contrasena" type="password" required
-          class="w-full border px-4 py-3 rounded-md" />
+          pattern="^(?=.*[A-Z])(?=.*\d)[A-Za-z\d@$!%*?&]{8,}$"
+          class="w-full border px-4 py-3 rounded-md"
+          [ngClass]="{'border-red-500': contrasena.invalid && (contrasena.touched || form.submitted)}"
+          #contrasena="ngModel" />
+
+        <small class="text-gray-600 text-xs block mt-1">
+          Debe tener al menos 8 caracteres, una mayúscula y un número. Ej: <b>Alexanda43</b>
+        </small>
+
+        <p *ngIf="contrasena.errors?.['required'] && (contrasena.touched || form.submitted)"
+          class="text-red-500 text-sm mt-1">Campo obligatorio.</p>
+        <p *ngIf="contrasena.errors?.['pattern'] && (contrasena.touched || form.submitted)"
+          class="text-red-500 text-sm mt-1">Formato inválido.</p>
       </div>
 
       <!-- Botón -->

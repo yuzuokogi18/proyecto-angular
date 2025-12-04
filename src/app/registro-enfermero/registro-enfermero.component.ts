@@ -1,17 +1,20 @@
 import { Component } from '@angular/core';
+import { FormsModule, NgForm } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { Doctor } from '../models/doctor';
 import { DoctorService } from '../services/doctor.service';
-import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-registro-enfermero',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, CommonModule],
   templateUrl: './registro-enfermero.component.html',
   styleUrl: './registro-enfermero.component.css'
 })
 export class RegistroEnfermeroComponent {
+
   enfermero: Doctor = {
     nombre: '',
     apellido_p: '',
@@ -19,7 +22,7 @@ export class RegistroEnfermeroComponent {
     correo: '',
     contrasena: '',
     cedula: '',
-    tipo: '2' // Tipo 2 = enfermero
+    tipo: '2'
   };
 
   constructor(
@@ -27,37 +30,26 @@ export class RegistroEnfermeroComponent {
     private router: Router
   ) {}
 
-  registrar() {
-    alert('🟡 Registrando enfermero...');
+  registrar(form: NgForm) {
+    if (form.invalid) return;
 
     this.doctorService.registrarDoctor(this.enfermero).subscribe({
-      next: (res: any) => {
-        console.log('✔️ Registro exitoso:', res);
+      next: async (res: any) => {
+        console.log('✅ Enfermero registrado:', this.enfermero);
 
-        // Guardar nombre completo en localStorage
-        const nombreCompleto = `${this.enfermero.nombre} ${this.enfermero.apellido_p} ${this.enfermero.apellido_m}`;
-        localStorage.setItem('nombre', nombreCompleto);
+        const nombreEnfermero = `${this.enfermero.nombre} ${this.enfermero.apellido_p} ${this.enfermero.apellido_m}`.trim();
+        localStorage.setItem('nombreEnfermero', nombreEnfermero);
 
-        alert('✅ ¡Enfermero registrado correctamente!');
-        this.resetFormulario();
-        this.router.navigate(['/welcomeenfermero']); // Redirección automática
+        localStorage.setItem('enfermeroTemporalCorreo', this.enfermero.correo);
+
+        await Swal.fire('¡Registro exitoso!', 'Enfermero registrado correctamente.', 'success');
+
+        this.router.navigate(['/loginenfermero']);
       },
-      error: (err: any) => {
-        console.error('❌ Error en el registro:', err);
-        alert('❌ No se pudo registrar el enfermero.');
+
+      error: () => {
+        Swal.fire('❌ Error', 'Ocurrió un problema al registrar el enfermero.', 'error');
       }
     });
-  }
-
-  resetFormulario() {
-    this.enfermero = {
-      nombre: '',
-      apellido_p: '',
-      apellido_m: '',
-      correo: '',
-      contrasena: '',
-      cedula: '',
-      tipo: '2'
-    };
   }
 }
