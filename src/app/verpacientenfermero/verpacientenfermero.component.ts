@@ -13,6 +13,7 @@ import Swal from 'sweetalert2';
   styleUrl: './verpacientenfermero.component.css'
 })
 export class VerpacientenfermeroComponent implements OnInit {
+
   pacientes: any[] = [];
   pacientesFiltrados: any[] = [];
   filtro: string = '';
@@ -45,11 +46,20 @@ export class VerpacientenfermeroComponent implements OnInit {
     this.doctorService.getPacientesPorEnfermero(idEnfermero).subscribe({
       next: (res: any) => {
         console.log('✅ Pacientes recibidos:', res);
-        this.pacientes = Array.isArray(res) ? res : (res?.data || []);
+
+        // Normalizamos los datos del backend
+        const lista = Array.isArray(res) ? res : (res?.data || []);
+
+        this.pacientes = lista.map((p: any) => ({
+          ...p,
+          id_paciente: String(p.id_paciente)   // 🔥 FORZADO A STRING
+        }));
+
         this.pacientesFiltrados = this.pacientes;
 
-        // Marcar como actual si el nombre coincide
         const actual = localStorage.getItem('nombrePaciente') || '';
+
+        // Marcar paciente actual
         this.pacientesFiltrados.forEach(p => {
           const full = `${p.nombres} ${p.apellido_p} ${p.apellido_m}`;
           p.actual = full === actual;
@@ -84,7 +94,10 @@ export class VerpacientenfermeroComponent implements OnInit {
 
   cambiarPacienteActual(paciente: any): void {
     const nombreCompleto = `${paciente.nombres} ${paciente.apellido_p} ${paciente.apellido_m}`;
+
     localStorage.setItem('nombrePaciente', nombreCompleto);
+    localStorage.setItem('id_paciente', paciente.id_paciente); // 🔥 STRING
+
     this.pacientePrincipal = nombreCompleto;
 
     this.pacientesFiltrados.forEach(p => {

@@ -10,15 +10,15 @@ export class NurseService {
 
   constructor(private http: HttpClient) {}
 
-  getEnfermerosPorHospital(idHospital: number): Observable<any> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
-    return this.http.get(`${this.apiUrl}/users/nurses/${idHospital}`, { headers });
-  }
+
 
   getDoctoresPorEnfermero(idEnfermero: number): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get(`${this.apiUrl}/doctorpatient/${idEnfermero}`, { headers });
   }
+  getEnfermerosPorHospital(idHospital: number) {
+  return this.http.get(`${this.apiUrl}/enfermeros/hospital/${idHospital}`);
+}
+
 }

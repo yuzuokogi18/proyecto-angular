@@ -15,11 +15,13 @@ import { Caregiver } from '../models/caregiver.model';
   imports: [CommonModule, FormsModule]
 })
 export class AsignarEnfermerosComponent implements OnInit {
-  enfermeros: any[] = [];
+   enfermeros: any[] = [];
   enfermerosSeleccionados: string[] = [];
   asignaciones: { id_usuario: number; turno: string }[] = [];
   turnosDisponibles: string[] = ['matutino', 'vespertino', 'nocturno'];
-  pacienteId: number = 0;
+
+  // AHORA ES STRING
+  pacienteId: string = '';
 
   // Paginación
   currentPage: number = 1;
@@ -34,7 +36,7 @@ export class AsignarEnfermerosComponent implements OnInit {
 
   ngOnInit(): void {
     this.route.queryParams.subscribe(params => {
-      this.pacienteId = Number(params['pacienteId']);
+      this.pacienteId = params['pacienteId'] ?? '';
     });
 
     const idHospital = localStorage.getItem('hospitalSeleccionadoId');
@@ -108,9 +110,10 @@ export class AsignarEnfermerosComponent implements OnInit {
       return;
     }
 
+    // ⬅️ CORREGIDO: id_paciente como STRING
     const solicitudes = this.asignaciones.map(a => ({
       id_usuario: a.id_usuario,
-      id_paciente: this.pacienteId,
+      id_paciente: this.pacienteId.toString(),
       turno: a.turno
     }));
 

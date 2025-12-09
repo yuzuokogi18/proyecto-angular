@@ -10,7 +10,7 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [ReactiveFormsModule, CommonModule, NgIf],
   templateUrl: './dispositivosdoctor.component.html',
-  styleUrl: './dispositivosdoctor.component.css'
+  styleUrls: ['./dispositivosdoctor.component.css']
 })
 export class DispositivosdoctorComponent {
 
@@ -20,7 +20,7 @@ export class DispositivosdoctorComponent {
   constructor(
     private fb: FormBuilder,
     private doctorService: DoctorService,
-    private router: Router   // ⭐ IMPORTANTE PARA REDIRECCIONAR
+    private router: Router
   ) {
     this.codeForm = this.fb.group({
       code: ['', [Validators.required, Validators.minLength(3)]]
@@ -38,9 +38,6 @@ export class DispositivosdoctorComponent {
     const code = this.codeForm.value.code;
     const idDoctor = Number(localStorage.getItem('idDoctor'));
 
-    console.log("ID DOCTOR EN LOCALSTORAGE =", idDoctor);
-    console.log("BODY ENVIADO =", { id_doctor: idDoctor });
-
     if (!idDoctor || idDoctor === 0) {
       Swal.fire({
         icon: 'error',
@@ -52,8 +49,9 @@ export class DispositivosdoctorComponent {
 
     this.doctorService.relacionarDispositivoConDoctor(code, idDoctor)
       .subscribe({
-        next: (resp: any) => {
-          console.log('Dispositivo asignado:', resp);
+        next: () => {
+          // ⭐ Guardar el ID del dispositivo en localStorage
+          localStorage.setItem('idDispositivo', code);
 
           Swal.fire({
             icon: 'success',
@@ -61,20 +59,12 @@ export class DispositivosdoctorComponent {
             text: 'El dispositivo fue asociado correctamente.',
             timer: 1800,
             showConfirmButton: false
-          }).then(() => {
-            // ⭐⭐ REDIRECCIÓN A AGREGAR PACIENTE ⭐⭐
-            this.router.navigate(['/agregarpaciente']);
-          });
+          }).then(() => this.router.navigate(['/agregarpaciente']));
 
           this.codeForm.reset();
           this.submitted = false;
         },
-
-        error: (err: any) => {
-          console.error("ERROR COMPLETO:", err);
-          console.log("BODY ENVIADO:", { id_doctor: idDoctor });
-          console.log("URL:", `https://pulsesenseapi.servemp3.com/doctor/patient/${code}`);
-
+        error: (err) => {
           Swal.fire({
             icon: 'error',
             title: 'Error al asignar',
@@ -83,5 +73,4 @@ export class DispositivosdoctorComponent {
         }
       });
   }
-
 }

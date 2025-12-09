@@ -10,19 +10,8 @@ export class PacienteService {
 
   constructor(private http: HttpClient) {}
 
-  // PRIMER PASO
-  crearPaciente(paciente: any): Observable<any> {
-    const token = localStorage.getItem('token');
-    const headers = new HttpHeaders({
-      Authorization: `Bearer ${token}`,
-      'Content-Type': 'application/json'
-    });
-
-    return this.http.post(this.apiUrl, paciente, { headers });
-  }
-
-  // SEGUNDO PASO — ACTUALIZAR TODOS LOS DATOS DEL PACIENTE
-  actualizarPaciente(id_paciente: number, paciente: any): Observable<any> {
+  // Guardar paciente: siempre PUT usando el ID del dispositivo
+  guardarPaciente(id_paciente: number, paciente: any): Observable<any> {
     const token = localStorage.getItem('token');
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,

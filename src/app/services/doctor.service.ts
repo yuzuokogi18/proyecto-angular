@@ -12,50 +12,62 @@ export class DoctorService {
 
   constructor(private http: HttpClient) {}
 
+  // Registrar un nuevo doctor
   registrarDoctor(doctor: Doctor): Observable<any> {
-    return this.http.post(`${this.apiUrl}/users`, doctor); 
+    return this.http.post(`${this.apiUrl}/users`, doctor);
   }
 
+  // Login de doctor
   loginDoctor(data: Credenciales): Observable<any> {
-    return this.http.post(`${this.apiUrl}/auth/login`, data, { observe: 'response' }); 
+    return this.http.post(`${this.apiUrl}/auth/login`, data, { observe: 'response' });
   }
 
+  // Obtener pacientes por doctor
   getPacientesPorDoctor(idDoctor: number): Observable<any> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || '';
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`https://pulsesenseapi.servemp3.com/doctor/patient/user/${idDoctor}`, { headers });
   }
 
+  // Obtener enfermeros asignados a un paciente
   getEnfermerosPorPaciente(idPaciente: number): Observable<any> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || '';
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`https://pulsesenseapi.servemp3.com/users/nurses/patient/${idPaciente}`, { headers });
   }
 
+  // Obtener pacientes por enfermero
   getPacientesPorEnfermero(idEnfermero: number): Observable<any> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || '';
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`https://pulsesenseapi.servemp3.com/nurse/patient/user/${idEnfermero}`, { headers });
   }
 
+  // Obtener enfermeros por doctor
   getEnfermerosPorDoctor(idDoctor: number): Observable<any> {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem('token') || '';
     const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
     return this.http.get<any>(`https://pulsesenseapi.servemp3.com/nursepatient/${idDoctor}`, { headers });
   }
+
+  // Relacionar dispositivo con doctor
   relacionarDispositivoConDoctor(codigoDispositivo: string, idDoctor: number): Observable<any> {
-  const token = localStorage.getItem('token');
-  const headers = new HttpHeaders({
-    Authorization: `Bearer ${token}`,
-    'Content-Type': 'application/json'
-  });
+    const token = localStorage.getItem('token') || '';
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json'
+    });
 
-  const body = { id_doctor: idDoctor };
+    const body = { id_doctor: idDoctor };
 
-  return this.http.put(
-    `https://pulsesenseapi.servemp3.com/doctor/patient/${codigoDispositivo}`,
-    body,
-    { headers }
-  );
+    return this.http.put(
+      `https://pulsesenseapi.servemp3.com/doctor/patient/${codigoDispositivo}`,
+      body,
+      { headers }
+    );
+  }
+  verificarDispositivoAsignado(idDoctor: number) {
+  return this.http.get(`https://tuapi/dispositivos/doctor/${idDoctor}`);
 }
+
 }

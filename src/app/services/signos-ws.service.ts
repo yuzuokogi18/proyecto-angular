@@ -17,8 +17,10 @@ export class SignosWsService {
       return;
     }
 
-    const wsUrl = `wss://pulsesenseapi.ddns.net/ws/connect?token=${finalToken}`;
+    // 🔵 URL NUEVA
+    const wsUrl = `wss://pulsesenseapi.servemp3.com/ws/connect?token=${finalToken}`;
     console.log('🔌 Conectando al WebSocket con URL:', wsUrl);
+
     this.socket = new WebSocket(wsUrl);
 
     this.socket.onopen = () => {
@@ -44,7 +46,6 @@ export class SignosWsService {
     this.socket.onclose = (event) => {
       console.warn('🔒 WebSocket cerrado. Código:', event.code, 'Razón:', event.reason);
 
-      // Opcional: intento de reconexión básica
       if (this.reconectarIntentos < this.maxIntentos) {
         this.reconectarIntentos++;
         console.log(`🔁 Intentando reconectar (#${this.reconectarIntentos}) en 3 segundos...`);

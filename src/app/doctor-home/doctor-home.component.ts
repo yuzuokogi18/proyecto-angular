@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
@@ -16,9 +16,17 @@ import { SignosWsService } from '../services/signos-ws.service';
   styleUrl: './doctor-home.component.css'
 })
 export class DoctorHomeComponent implements OnInit {
+
+  constructor(
+    private signosWsService: SignosWsService,
+    private doctorService: DoctorService,
+    private router: Router,
+    private cdr: ChangeDetectorRef
+  ) {}
+
   doctor = localStorage.getItem('nombreDoctor') || 'Dr. Ana Paula';
   patient = localStorage.getItem('nombrePaciente') || 'Luna Vazquez';
-  idPaciente = 4;
+  idPaciente = 109219; // <-- CORRIGE AQUÍ SI ES OTRO ID
   idDoctor = Number(localStorage.getItem('iduser')) || 0;
 
   ultimaFrecuencia = 0;
@@ -31,38 +39,19 @@ export class DoctorHomeComponent implements OnInit {
   barChartOptionsAmarillo: ChartConfiguration<'bar'>['options'] = {
     responsive: true,
     plugins: { legend: { display: false } },
-    scales: {
-      x: { display: false },
-      y: { title: { display: true, text: 'Valor' }, min: 0, ticks: { stepSize: 20 } }
-    }
+    scales: { x: { display: false }, y: { min: 0, ticks: { stepSize: 20 } } }
   };
 
   barChartOptionsAzul: ChartConfiguration<'bar'>['options'] = {
     responsive: true,
     plugins: { legend: { display: false } },
-    scales: {
-      x: { display: false },
-      y: {
-        min: 0,
-        max: 100,
-        ticks: { stepSize: 10 },
-        title: { display: true, text: 'Porcentaje (%)' }
-      }
-    }
+    scales: { x: { display: false }, y: { min: 0, max: 100, ticks: { stepSize: 10 } } }
   };
 
   barChartOptionsVerde: ChartConfiguration<'bar'>['options'] = {
     responsive: true,
     plugins: { legend: { display: false } },
-    scales: {
-      x: { display: false },
-      y: {
-        min: 0,
-        max: 100,
-        ticks: { stepSize: 20 },
-        title: { display: true, text: 'Intensidad (%)' }
-      }
-    }
+    scales: { x: { display: false }, y: { min: 0, max: 3000, ticks: { stepSize: 500 } } }
   };
 
   barChartFrecuencia: ChartData<'bar'> = {
@@ -82,100 +71,62 @@ export class DoctorHomeComponent implements OnInit {
 
   pieChartTemperatura: ChartData<'pie', number[], string> = {
     labels: ['Temperatura', 'Resto'],
-    datasets: [{
-      data: [0, 100],
-      backgroundColor: ['#EF4444', '#F3F4F6']
-    }]
+    datasets: [{ data: [0, 100], backgroundColor: ['#EF4444', '#F3F4F6'] }]
   };
-
-  constructor(
-    private signosWsService: SignosWsService,
-    private doctorService: DoctorService,
-    private router: Router
-  ) {}
 
   ngOnInit() {
     console.log('🧠 DoctorHomeComponent inicializado');
+
     const token = localStorage.getItem('token') || '';
-    console.log('🧪 Token obtenido para WS:', token);
+
     if (!token) {
-      alert('❌ Token no encontrado en localStorage. No se puede conectar al WebSocket.');
+      alert('❌ Token no encontrado');
       return;
     }
 
     this.signosWsService.conectar(token);
 
     this.signosWsService.getDatos().subscribe((msg: any) => {
-      console.log('📨 Mensaje WebSocket recibido:', msg);
+      console.log("📨 MSG WS:", msg);
 
-      if (!msg || !msg.event) return;
+      if (msg.event !== "new_Sign") return;
 
-      // Evento de signos vitales
-      if (msg.event === 'new_Sign') {
-        const data = msg.data;
-        if (!data || Number(data.id_paciente) !== this.idPaciente) return;
+      const data = msg.data;
+      if (!data) return;
 
-        const valor = Number(data.valor || 0);
+      // 🔥 Corrige comparación
+      if (Number(data.id_paciente) !== Number(this.idPaciente)) return;
 
-        switch (data.id_signo) {
-          case 1:
-            this.ultimaSaturacion = valor;
-            this.barChartSaturacion.labels = [''];
-            this.barChartSaturacion.datasets[0].data = [valor];
-            break;
-          case 2:
-            this.ultimaTemperatura = valor;
-            const tempValor = Math.min(Math.max(valor, 0), 100);
-            const restante = 100 - tempValor;
-            this.pieChartTemperatura = {
-              labels: ['Temperatura', 'Resto'],
-              datasets: [{ data: [tempValor, restante], backgroundColor: ['#EF4444', '#F3F4F6'] }]
-            };
-            break;
-          case 3:
-            this.ultimaFrecuencia = valor;
-            this.barChartFrecuencia.labels = [''];
-            this.barChartFrecuencia.datasets[0].data = [valor];
-            break;
-          case 6:
-            this.ultimaActividad = valor;
-            this.barChartActividad.labels = [''];
-            this.barChartActividad.datasets[0].data = [valor];
-            break;
-        }
+      const valor = Number(data.valor || 0);
+
+      switch (data.id_signo) {
+        case 3:  // ❤️ Frecuencia
+          this.ultimaFrecuencia = valor;
+          this.barChartFrecuencia.datasets[0].data = [valor];
+          break;
+
+        case 4:  // 🫁 Saturación
+          this.ultimaSaturacion = valor;
+          this.barChartSaturacion.datasets[0].data = [valor];
+          break;
+
+        case 2:  // 🌡️ Temperatura
+          this.ultimaTemperatura = valor;
+          const temp = Math.min(Math.max(valor, 0), 100);
+          this.pieChartTemperatura = {
+            labels: ['Temperatura', 'Resto'],
+            datasets: [{ data: [temp, 100 - temp], backgroundColor: ['#EF4444', '#F3F4F6'] }]
+          };
+          break;
+
+        case 1:  // ⚡ Actividad eléctrica
+          this.ultimaActividad = valor;
+          this.barChartActividad.datasets[0].data = [valor];
+          break;
       }
 
-      // Evento de movimiento brusco
-      if (msg.event === 'new_motion') {
-        const movimiento = msg.data?.movimiento;
-        const idpaciente = Number(msg.data?.idpaciente);
-
-        if (movimiento && idpaciente === this.idPaciente) {
-          console.log('🎯 Movimiento brusco detectado:', msg.data);
-          Swal.fire({
-            icon: 'warning',
-            title: '⚠️ Movimiento brusco detectado',
-            text: 'Se ha detectado un movimiento anormal del paciente.',
-            confirmButtonText: 'Entendido',
-            confirmButtonColor: '#F59E0B'
-          });
-        }
-      }
+      // 🔥 FORZAMOS QUE ANGULAR REFRESQUE LA VISTA
+      this.cdr.detectChanges();
     });
   }
-
-  mapearNombreSigno(id: number): string {
-    switch (id) {
-      case 1: return 'Saturación de oxígeno';
-      case 2: return 'Temperatura corporal';
-      case 3: return 'Frecuencia cardíaca';
-      case 4: return 'Presión arterial media';
-      case 5: return 'Frecuencia respiratoria';
-      case 6: return 'Actividad eléctrica del corazón';
-      case 7: return 'Movimiento brusco';
-      default: return 'Otro';
-    }
-  }
 }
-
-

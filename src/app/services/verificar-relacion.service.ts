@@ -1,5 +1,3 @@
-// src/app/services/verificar-relacion.service.ts
-
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
@@ -12,8 +10,13 @@ export class VerificarRelacionService {
 
   constructor(private http: HttpClient) {}
 
-  // ✅ Nombre corregido
+  // VERIFICAR SI EL DOCTOR YA ESTÁ ASIGNADO A UN HOSPITAL
   verificarDoctorAsignado(idDoctor: number): Observable<any> {
-    return this.http.get(`${this.apiUrl}/${idDoctor}`);
+    return this.http.get(`${this.apiUrl}/doctor/${idDoctor}`);
+  }
+
+  // VERIFICAR SI EL DOCTOR TIENE DISPOSITIVO ASIGNADO (opcional)
+  verificarDispositivoAsignado(idDoctor: number): Observable<any> {
+    return this.http.get(`https://pulsesenseapi.servemp3.com/dispositivo/${idDoctor}`);
   }
 }

@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 
+// COMPONENTES
 import { LandingComponent } from './landing/landing.component';
 import { LoginComponent } from './login/login.component';
 import { AgregarhospitalComponent } from './agregarhospital/agregarhospital.component';
@@ -24,44 +25,42 @@ import { ReportesPacienteComponent } from './reportes-paciente/reportes-paciente
 import { HistorialPacienteComponent } from './historial-paciente/historial-paciente.component';
 import { DispositivosdoctorComponent } from './dispositivosdoctor/dispositivosdoctor.component';
 
+// GUARD
+import { authGuard } from './guards/auth.guard';
 
-export const routes: Routes = [{ path: '', component:HomeComponent },
-    { path: 'landing', component: LandingComponent },
-     { path: 'login', component: LoginComponent },
-     { path: 'agregarhospital', component: AgregarhospitalComponent },
-     { path: 'modalmapa', component: ModalMapaComponent },
-     { path: 'logindoctor', component: LoginDoctorComponent },
-     { path: 'registrodoctor', component: RegistroDoctorComponent },
-     { path: 'welcomeenfermero', component: WelcomeenfermeroComponent },
-    { path: 'enfermerologin', component: EnfermeroLoginComponent },
-    { path: 'registroenfermero', component: RegistroEnfermeroComponent },
-     { path: 'asignarenfermeros', component: AsignarEnfermerosComponent },
+export const routes: Routes = [
 
-  { path: 'agregarpaciente', component: AgregarPacienteComponent },
-   { path: 'doctorhome', component: DoctorHomeComponent },
-    { path: 'dispositivosdoctor', component: DispositivosdoctorComponent },
+  // -------------------------
+  // RUTAS PÚBLICAS
+  // -------------------------
+  { path: '', component: HomeComponent },
+  { path: 'landing', component: LandingComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'logindoctor', component: LoginDoctorComponent },
+  { path: 'enfermerologin', component: EnfermeroLoginComponent },
+  { path: 'registrodoctor', component: RegistroDoctorComponent },
+  { path: 'registroenfermero', component: RegistroEnfermeroComponent },
+  { path: 'agregarhospital', component: AgregarhospitalComponent },
+  { path: 'modalmapa', component: ModalMapaComponent },
 
-   { path: 'sidebardoctor', component: SidebardoctorComponent },
-    { path: 'patientsdoctor', component: PatientsdoctorComponent },
-   
+  // -------------------------
+  // RUTAS PROTEGIDAS (GUARD)
+  // -------------------------
+  { path: 'agregarpaciente', component: AgregarPacienteComponent, canActivate: [authGuard] },
+  { path: 'doctorhome', component: DoctorHomeComponent, canActivate: [authGuard] },
+  { path: 'dispositivosdoctor', component: DispositivosdoctorComponent, canActivate: [authGuard] },
+  { path: 'sidebardoctor', component: SidebardoctorComponent, canActivate: [authGuard] },
+  { path: 'patientsdoctor', component: PatientsdoctorComponent, canActivate: [authGuard] },
+  { path: 'asignarenfermeros', component: AsignarEnfermerosComponent, canActivate: [authGuard] },
 
-     { path: 'enfermerohome', component: EnfermeroHomeComponent },
-      { path: 'sidebarenfermero', component: SidebarenfermeroComponent },
-      { path: 'verpacientenfermero', component: VerpacientenfermeroComponent },
+  { path: 'welcomeenfermero', component: WelcomeenfermeroComponent, canActivate: [authGuard] },
+  { path: 'enfermerohome', component: EnfermeroHomeComponent, canActivate: [authGuard] },
+  { path: 'sidebarenfermero', component: SidebarenfermeroComponent, canActivate: [authGuard] },
+  { path: 'verpacientenfermero', component: VerpacientenfermeroComponent, canActivate: [authGuard] },
 
-
-         { path: 'doctoresasignados', component: DoctoresasignadosComponent},
-          { path: 'enfermerosasignados', component: EnfermerosAsignadosComponent},
-          { path: 'reportespaciente', component: ReportesPacienteComponent},
-         { path: 'historialpaciente', component: HistorialPacienteComponent },
-
-
-   
-
-
-
-
-
-
+  { path: 'doctoresasignados', component: DoctoresasignadosComponent, canActivate: [authGuard] },
+  { path: 'enfermerosasignados', component: EnfermerosAsignadosComponent, canActivate: [authGuard] },
+  { path: 'reportespaciente', component: ReportesPacienteComponent, canActivate: [authGuard] },
+  { path: 'historialpaciente', component: HistorialPacienteComponent, canActivate: [authGuard] },
 
 ];

@@ -16,4 +16,8 @@ export class WorkerService {
   relacionarDoctorConHospital(data: Worker): Observable<any> {
     return this.http.post(this.apiUrl, data);
   }
+  verificarDispositivoAsignado(idDoctor: number) {
+  return this.http.get(`https://tuapi/dispositivos/doctor/${idDoctor}`);
+}
+
 }

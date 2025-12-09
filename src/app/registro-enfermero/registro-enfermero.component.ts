@@ -44,7 +44,7 @@ export class RegistroEnfermeroComponent {
 
         await Swal.fire('¡Registro exitoso!', 'Enfermero registrado correctamente.', 'success');
 
-        this.router.navigate(['/loginenfermero']);
+         this.router.navigate(['/welcomeenfermero']);
       },
 
       error: () => {
