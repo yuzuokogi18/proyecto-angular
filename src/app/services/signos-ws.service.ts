@@ -17,7 +17,6 @@ export class SignosWsService {
       return;
     }
 
-    // 🔵 URL NUEVA
     const wsUrl = `wss://pulsesenseapi.servemp3.com/ws/connect?token=${finalToken}`;
     console.log('🔌 Conectando al WebSocket con URL:', wsUrl);
 

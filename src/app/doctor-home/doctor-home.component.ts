@@ -26,7 +26,7 @@ export class DoctorHomeComponent implements OnInit {
 
   doctor = localStorage.getItem('nombreDoctor') || 'Dr. Ana Paula';
   patient = localStorage.getItem('nombrePaciente') || 'Luna Vazquez';
-  idPaciente = 109219; // <-- CORRIGE AQUÍ SI ES OTRO ID
+  idPaciente = 109219; 
   idDoctor = Number(localStorage.getItem('iduser')) || 0;
 
   ultimaFrecuencia = 0;
@@ -74,13 +74,15 @@ export class DoctorHomeComponent implements OnInit {
     datasets: [{ data: [0, 100], backgroundColor: ['#EF4444', '#F3F4F6'] }]
   };
 
+
+
   ngOnInit() {
-    console.log('🧠 DoctorHomeComponent inicializado');
+    console.log('DoctorHomeComponent inicializado');
 
     const token = localStorage.getItem('token') || '';
 
     if (!token) {
-      alert('❌ Token no encontrado');
+      alert('Token no encontrado');
       return;
     }
 
@@ -89,43 +91,63 @@ export class DoctorHomeComponent implements OnInit {
     this.signosWsService.getDatos().subscribe((msg: any) => {
       console.log("📨 MSG WS:", msg);
 
-      if (msg.event !== "new_Sign") return;
+      // ------------------------------------------
+      // CASO A: Actualización de Gráficas (Signos)
+      // ------------------------------------------
+      if (msg.event === "new_Sign") {
+        const data = msg.data;
+        if (!data) return;
 
-      const data = msg.data;
-      if (!data) return;
+        // Validar que sea del paciente actual
+        if (Number(data.id_paciente) !== Number(this.idPaciente)) return;
 
-      // 🔥 Corrige comparación
-      if (Number(data.id_paciente) !== Number(this.idPaciente)) return;
+        const valor = Number(data.valor || 0);
 
-      const valor = Number(data.valor || 0);
+        switch (data.id_signo) {
+          case 3:
+            this.ultimaFrecuencia = valor;
+            this.barChartFrecuencia.datasets[0].data = [valor];
+            break;
 
-      switch (data.id_signo) {
-        case 3:  // ❤️ Frecuencia
-          this.ultimaFrecuencia = valor;
-          this.barChartFrecuencia.datasets[0].data = [valor];
-          break;
+          case 4:
+            this.ultimaSaturacion = valor;
+            this.barChartSaturacion.datasets[0].data = [valor];
+            break;
 
-        case 4:  // 🫁 Saturación
-          this.ultimaSaturacion = valor;
-          this.barChartSaturacion.datasets[0].data = [valor];
-          break;
+          case 2:
+            this.ultimaTemperatura = valor;
+            const temp = Math.min(Math.max(valor, 0), 100);
+            this.pieChartTemperatura = {
+              labels: ['Temperatura', 'Resto'],
+              datasets: [{ data: [temp, 100 - temp], backgroundColor: ['#EF4444', '#F3F4F6'] }]
+            };
+            break;
 
-        case 2:  // 🌡️ Temperatura
-          this.ultimaTemperatura = valor;
-          const temp = Math.min(Math.max(valor, 0), 100);
-          this.pieChartTemperatura = {
-            labels: ['Temperatura', 'Resto'],
-            datasets: [{ data: [temp, 100 - temp], backgroundColor: ['#EF4444', '#F3F4F6'] }]
-          };
-          break;
-
-        case 1:  // ⚡ Actividad eléctrica
-          this.ultimaActividad = valor;
-          this.barChartActividad.datasets[0].data = [valor];
-          break;
+          case 1:
+            this.ultimaActividad = valor;
+            this.barChartActividad.datasets[0].data = [valor];
+            break;
+        }
       }
 
-      // 🔥 FORZAMOS QUE ANGULAR REFRESQUE LA VISTA
+      else if (msg.event === "new_motion") {
+  
+        const msgPatientId = msg.patient_id || msg.data?.idpaciente;
+
+        if (Number(msgPatientId) === Number(this.idPaciente)) {
+          
+          if (msg.data && msg.data.movimiento) {
+            
+            Swal.fire({
+              title: '¡Nuevo Movimiento Detectado!',
+              text: `El paciente ${this.patient} se ha movido a las ${msg.data.hora_registro || 'hora reciente'}.`,
+              icon: 'warning', 
+              confirmButtonText: 'Entendido',
+              confirmButtonColor: '#3B82F6',
+            });
+          }
+        }
+      }
       this.cdr.detectChanges();
     });
   }
