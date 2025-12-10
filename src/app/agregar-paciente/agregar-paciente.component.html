@@ -72,7 +72,7 @@
                    [ngClass]="{'border-red-500': peso.invalid && peso.touched}"/>
             <div *ngIf="peso.invalid && peso.touched" class="text-red-500 text-xs mt-1">
               <span *ngIf="peso.errors?.['required']">Este campo es obligatorio.</span>
-              <span *ngIf="peso.errors?.['min']">Peso mínimo 40 kg.</span>
+              <span *ngIf="peso.errors?.['min']">Peso mínimo  kg.</span>
               <span *ngIf="peso.errors?.['max']">Peso máximo 999 kg.</span>
             </div>
           </div>

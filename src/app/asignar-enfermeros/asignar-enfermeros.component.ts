@@ -42,9 +42,10 @@ export class AsignarEnfermerosComponent implements OnInit {
     const idHospital = localStorage.getItem('hospitalSeleccionadoId');
     if (idHospital) {
       this.nurseService.getEnfermerosPorHospital(Number(idHospital)).subscribe({
-        next: (res) => {
-          this.enfermeros = res?.data || res || [];
-        },
+       next: (res: any) => {
+  this.enfermeros = Array.isArray(res) ? res : res.data || [];
+},
+
         error: () => {
           Swal.fire('Error', 'No se pudieron cargar los enfermeros', 'error');
         }
